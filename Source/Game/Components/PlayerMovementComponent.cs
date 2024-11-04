@@ -4,13 +4,10 @@ namespace _2DPuzzle
 {
     public class PlayerMovementComponent : EntityComponent
     {
-        private const float speed = 50;
-
-        private TransformComponent transformComponent = null;
+        private const float speed = 100;
 
         public PlayerMovementComponent(Entity inOwner) : base(inOwner)
         {
-            transformComponent = inOwner.GetComponent<TransformComponent>();
             SetCanUpdate(true);
         }
 
@@ -18,7 +15,7 @@ namespace _2DPuzzle
         {
             base.Update(inGameTime);
 
-            if (transformComponent == null)
+            if (_transformComponent == null)
             {
                 return;
             }
@@ -38,7 +35,7 @@ namespace _2DPuzzle
 
             movement.Normalize();
 
-            transformComponent.position += UpdateManager.GetInstance().deltaTime * speed * movement;
+            _transformComponent.position += UpdateManager.GetInstance().deltaTime * speed * movement;
         }
     }
 }

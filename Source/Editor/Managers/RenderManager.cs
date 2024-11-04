@@ -42,6 +42,8 @@ namespace _2DPuzzle
         public SpriteBatch spriteBatch = null;
 
         public Microsoft.Xna.Framework.Content.ContentManager content = null;
+        public GraphicsDevice graphicsDevice = null;
+        public GraphicsDeviceManager graphicsDeviceManager = null;
 
         public int totalBatch = 0;
 
@@ -50,8 +52,22 @@ namespace _2DPuzzle
         private const int minLayer = -3;
         private const int maxLayer = 3;
 
-        public void InitializeManager(GraphicsDevice inGraphicsDevice, Microsoft.Xna.Framework.Content.ContentManager inContent)
+        public Matrix screenScaleMatrix = Matrix.Identity;
+
+        // The desired resolution of the game
+        private readonly float _resolutionWidth = 918;
+        private readonly float _resolutionHeight = 515;
+
+        // The resolution we render the game at
+        private int _virtualWidth = 918;
+        private int _virtualHeight = 515;
+
+        private Viewport _viewport;
+
+        public void InitializeManager(GraphicsDevice inGraphicsDevice, Microsoft.Xna.Framework.Content.ContentManager inContent, GraphicsDeviceManager inGraphicsDeviceManager)
         {
+            graphicsDevice = inGraphicsDevice;
+            graphicsDeviceManager = inGraphicsDeviceManager;
             spriteBatch = new SpriteBatch(inGraphicsDevice);
             content = inContent;
 
@@ -65,13 +81,24 @@ namespace _2DPuzzle
                 { 2, new List<RenderComponent>() },
                 { 3, new List<RenderComponent>() }
             };
+
+            SetResolution(1080, 1920);
+
+            UpdateScreenScaleMatrix();
+        }
+
+        private void SetResolution(int height, int width)
+        {
+            graphicsDeviceManager.PreferredBackBufferHeight = height;
+            graphicsDeviceManager.PreferredBackBufferWidth = width;
+            graphicsDeviceManager.ApplyChanges();
         }
 
         public void Render(GameTime inGameTime)
         {
             totalBatch = 0;
 
-            for(int currentLayer = minLayer; currentLayer <= maxLayer; currentLayer++)
+            for (int currentLayer = minLayer; currentLayer <= maxLayer; currentLayer++)
             {
                 for (int currentRenderer = 0; currentRenderer < LayerToRenderComponents[currentLayer].Count; currentRenderer++)
                 {
@@ -91,6 +118,37 @@ namespace _2DPuzzle
         {
             LayerToRenderComponents[oldLayer].Remove(inRenderComponent);
             LayerToRenderComponents[inLayer].Add(inRenderComponent);
+        }
+
+        public void UpdateScreenScaleMatrix()
+        {
+            float screenWidth = graphicsDevice.PresentationParameters.BackBufferWidth;
+            float screenHeight = graphicsDevice.PresentationParameters.BackBufferHeight;
+
+            if(screenWidth / _resolutionWidth > screenWidth / _resolutionHeight)
+            {
+                float aspect = screenHeight / _resolutionHeight;
+                _virtualWidth = (int)(aspect * _resolutionWidth);
+                _virtualHeight = (int)screenHeight;
+            }
+            else
+            {
+                float aspect = screenWidth / _resolutionHeight;
+                _virtualWidth = (int)screenWidth;
+                _virtualHeight = (int)(aspect * _resolutionHeight);
+            }
+
+            screenScaleMatrix = Matrix.CreateScale(_virtualWidth / _resolutionWidth);
+
+            /*_viewport = new Viewport()
+            {
+                X = (int)(screenWidth / 2 - _virtualWidth / 2),
+                Y = (int)(screenHeight / 2 - _virtualHeight / 2),
+                Width = _virtualWidth,
+                Height = _virtualHeight,
+                MinDepth = 0,
+                MaxDepth = 1
+            };*/
         }
     }
 }

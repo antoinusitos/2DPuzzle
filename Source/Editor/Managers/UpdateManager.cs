@@ -61,7 +61,7 @@ namespace _2DPuzzle
         // Return true if game must continue
         public bool Update(GameTime inGameTime)
         {
-            if (InputManager.GetInstance().IsGamepadButtonDown(InputManager.GamepadButton.Back) || InputManager.GetInstance().IsKeyDown(Keys.Escape))
+            if (/*InputManager.GetInstance().IsGamepadButtonDown(InputManager.GamepadButton.Back) || */InputManager.GetInstance().IsKeyDown(Keys.Escape))
                 return false;
 
             deltaTime = (float)inGameTime.ElapsedGameTime.TotalSeconds;

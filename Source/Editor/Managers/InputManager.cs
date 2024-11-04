@@ -12,11 +12,6 @@ namespace _2DPuzzle
 
         private static readonly object _lock = new object();
 
-        public enum GamepadButton
-        {
-            Back
-        }
-
         public static InputManager GetInstance()
         {
             // This conditional is needed to prevent threads stumbling over the
@@ -66,15 +61,11 @@ namespace _2DPuzzle
             return Keyboard.GetState().IsKeyDown(Inputs.mapping[inName]);
         }
 
-        public bool IsGamepadButtonDown(GamepadButton inGamepadButton)
+       /* public bool IsGamepadButtonDown(GamePadButtons inGamepadButton)
         {
-            switch(inGamepadButton)
-            {
-                case GamepadButton.Back:
-                    return GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed;
-            }
+            return GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed;
 
             return false;
-        }
+        }*/
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace _2DPuzzle
 {
@@ -14,18 +15,32 @@ namespace _2DPuzzle
         protected ContentManager _contentManager = null;
         protected LevelManager _levelManager = null;
 
+        protected bool _isResizing = false;
+
         public GameBase()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += OnClientSizeChanged;
+        }
+
+        private void OnClientSizeChanged(object sender, EventArgs e)
+        {
+            if(!_isResizing && Window.ClientBounds.Width > 0 && Window.ClientBounds.Height > 0)
+            {
+                _isResizing = true;
+                _renderManager.UpdateScreenScaleMatrix();
+                _isResizing = false;
+            }
         }
 
         protected override void Initialize()
         {
             _updateManager = UpdateManager.GetInstance();
             _renderManager = RenderManager.GetInstance();
-            _renderManager.InitializeManager(GraphicsDevice, Content);
+            _renderManager.InitializeManager(GraphicsDevice, Content, _graphics);
             _contentManager = ContentManager.GetInstance();
             _levelManager = LevelManager.GetInstance();
             _levelManager.InitializeManager();

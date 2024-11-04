@@ -1,5 +1,4 @@
-﻿
-namespace _2DPuzzle
+﻿namespace _2DPuzzle
 {
     public class LevelTest : Level
     {
@@ -10,6 +9,25 @@ namespace _2DPuzzle
             Player player = new Player();
             entities.Add(player);
             player.GetComponent<TransformComponent>().position.Y = 100;
+
+            ParallaxAsset parallaxAssetFar = new ParallaxAsset("Far");
+            parallaxAssetFar.GetComponent<SpriteRenderComponent>().SwitchLayer(-3);
+            entities.Add(parallaxAssetFar);
+
+            ParallaxAsset parallaxAssetMid = new ParallaxAsset("Mid");
+            parallaxAssetMid.GetComponent<SpriteRenderComponent>().SwitchLayer(-2);
+            entities.Add(parallaxAssetMid);
+
+            ParallaxAsset parallaxAssetClose = new ParallaxAsset("Close");
+            parallaxAssetClose.GetComponent<SpriteRenderComponent>().SwitchLayer(-1);
+            entities.Add(parallaxAssetClose);
+
+            /*Floor floor = new Floor();
+            entities.Add(floor);
+            floor.GetComponent<TransformComponent>().position.Y = 100;
+
+            DebugBackground debugBackground = new DebugBackground();
+            entities.Add(debugBackground);*/
         }
     }
 }
