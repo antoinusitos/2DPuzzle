@@ -4,7 +4,7 @@ using System;
 
 namespace _2DPuzzle
 {
-    public class GameBase : Microsoft.Xna.Framework.Game
+    public class GameBase : Game
     {
         //ENGINE
         protected GraphicsDeviceManager _graphics = null;

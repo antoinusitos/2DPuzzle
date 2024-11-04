@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
-using static _2DPuzzle.Inputs;
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace _2DPuzzle
 {

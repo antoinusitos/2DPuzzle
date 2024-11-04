@@ -4,7 +4,7 @@ namespace _2DPuzzle
 {
     public class PlayerMovementComponent : EntityComponent
     {
-        private const float speed = 100;
+        private const float speed = 50;//100;
 
         public PlayerMovementComponent(Entity inOwner) : base(inOwner)
         {
@@ -27,6 +27,8 @@ namespace _2DPuzzle
             vertical += InputManager.GetInstance().IsKeyDown("Down") ? 1 : 0;
 
             Vector2 movement = new Vector2(horizontal, vertical);
+
+            movement = Vector2.UnitX; //HACK
 
             if (movement == Vector2.Zero)
             {

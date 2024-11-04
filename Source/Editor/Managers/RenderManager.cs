@@ -94,6 +94,16 @@ namespace _2DPuzzle
             graphicsDeviceManager.ApplyChanges();
         }
 
+        public float GetScreenWidth()
+        {
+            return graphicsDeviceManager.PreferredBackBufferWidth;
+        }
+
+        public float GetScreenHeight()
+        {
+            return graphicsDeviceManager.PreferredBackBufferHeight;
+        }
+
         public void Render(GameTime inGameTime)
         {
             totalBatch = 0;

@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace _2DPuzzle
 {
@@ -15,12 +14,14 @@ namespace _2DPuzzle
 
         public string name = "";
 
+        public TransformComponent transformComponent = null;
+
         public Entity()
         {
             children = new List<Entity>();
             components = new List<EntityComponent>();
 
-            TransformComponent transformComponent = new TransformComponent(this);
+            transformComponent = new TransformComponent(this);
 
             components.Add(transformComponent);
 

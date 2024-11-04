@@ -1,4 +1,6 @@
-﻿namespace _2DPuzzle
+﻿using Microsoft.Xna.Framework;
+
+namespace _2DPuzzle
 {
     public class LevelTest : Level
     {
@@ -8,7 +10,7 @@
 
             Player player = new Player();
             entities.Add(player);
-            player.GetComponent<TransformComponent>().position.Y = 100;
+            player.GetComponent<TransformComponent>().position.Y = 250;
 
             ParallaxAsset parallaxAssetFar = new ParallaxAsset("Far");
             parallaxAssetFar.GetComponent<SpriteRenderComponent>().SwitchLayer(-3);
@@ -21,6 +23,9 @@
             ParallaxAsset parallaxAssetClose = new ParallaxAsset("Close");
             parallaxAssetClose.GetComponent<SpriteRenderComponent>().SwitchLayer(-1);
             entities.Add(parallaxAssetClose);
+
+            DebugMousePosition debugMousePosition = new DebugMousePosition();
+            debugMousePosition.transformComponent.position = new Vector2(RenderManager.GetInstance().GetScreenWidth() - 150, 10);
 
             /*Floor floor = new Floor();
             entities.Add(floor);
