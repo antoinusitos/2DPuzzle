@@ -10,7 +10,7 @@ namespace _2DPuzzle
 
             Player player = new Player();
             entities.Add(player);
-            player.GetComponent<TransformComponent>().position = Vector2.UnitX * 100;
+            player.GetComponent<TransformComponent>().position = new Vector2(100, 250);
 
             ParallaxAsset parallaxAssetFar = new ParallaxAsset("Far");
             parallaxAssetFar.GetComponent<SpriteRenderComponent>().SwitchLayer(-3);

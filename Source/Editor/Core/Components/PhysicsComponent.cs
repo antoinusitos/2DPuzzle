@@ -25,8 +25,8 @@ namespace _2DPuzzle
         {
             CollisionManager.GetInstance().RegisterPhysicsComponent(this);
             canUpdate = true;
-            canRender = true;
-            RenderManager.GetInstance().RegisterRenderer(this);
+            /*canRender = true;
+            RenderManager.GetInstance().RegisterRenderer(this);*/
 
             whiteRectangle = new Texture2D(RenderManager.GetInstance().graphicsDevice, 1, 1);
             whiteRectangle.SetData(new[] { Color.White });

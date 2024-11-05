@@ -4,7 +4,7 @@ namespace _2DPuzzle
 {
     public class PlayerMovementComponent : EntityComponent
     {
-        private const float speed = 50;//100;
+        private const float speed = 100;
 
         private PhysicsComponent physicsComponent = null;
 
@@ -40,7 +40,7 @@ namespace _2DPuzzle
                 movement.Normalize();
             }
 
-            Vector2 finalMovement = WorldManager.gravity + movement;
+            Vector2 finalMovement = WorldManager.gravity + movement * speed * UpdateManager.GetInstance().deltaTime;
 
             physicsComponent.velocity = finalMovement;
 
