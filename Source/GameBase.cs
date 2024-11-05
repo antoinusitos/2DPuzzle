@@ -14,6 +14,8 @@ namespace _2DPuzzle
         protected RenderManager _renderManager = null;
         protected ContentManager _contentManager = null;
         protected LevelManager _levelManager = null;
+        protected CollisionManager _collisionManager = null;
+        protected WorldManager _worldManager = null;
 
         protected bool _isResizing = false;
 
@@ -44,6 +46,8 @@ namespace _2DPuzzle
             _contentManager = ContentManager.GetInstance();
             _levelManager = LevelManager.GetInstance();
             _levelManager.InitializeManager();
+            _collisionManager = CollisionManager.GetInstance();
+            _worldManager = WorldManager.GetInstance();
 
             base.Initialize();
         }
@@ -59,6 +63,8 @@ namespace _2DPuzzle
             {
                 Exit();
             }
+
+            _collisionManager.ProcessPhysics();
 
             base.Update(inGameTime);
         }

@@ -47,7 +47,7 @@ namespace _2DPuzzle
 
         public int totalBatch = 0;
 
-        private Dictionary<int, List<RenderComponent>> LayerToRenderComponents = null;
+        private Dictionary<int, List<EntityComponent>> LayerToRenderComponents = null;
 
         private const int minLayer = -3;
         private const int maxLayer = 3;
@@ -71,15 +71,15 @@ namespace _2DPuzzle
             spriteBatch = new SpriteBatch(inGraphicsDevice);
             content = inContent;
 
-            LayerToRenderComponents = new Dictionary<int, List<RenderComponent>>
+            LayerToRenderComponents = new Dictionary<int, List<EntityComponent>>
             {
-                { -3, new List<RenderComponent>() },
-                { -2, new List<RenderComponent>() },
-                { -1, new List<RenderComponent>() },
-                { 0, new List<RenderComponent>() },
-                { 1, new List<RenderComponent>() },
-                { 2, new List<RenderComponent>() },
-                { 3, new List<RenderComponent>() }
+                { -3, new List<EntityComponent>() },
+                { -2, new List<EntityComponent>() },
+                { -1, new List<EntityComponent>() },
+                { 0, new List<EntityComponent>() },
+                { 1, new List<EntityComponent>() },
+                { 2, new List<EntityComponent>() },
+                { 3, new List<EntityComponent>() }
             };
 
             SetResolution(1080, 1920);
@@ -119,7 +119,7 @@ namespace _2DPuzzle
             //Debug.Log("Batch :" + totalBatch);
         }
 
-        public void RegisterRenderer(RenderComponent inRenderComponent)
+        public void RegisterRenderer(EntityComponent inRenderComponent)
         {
             LayerToRenderComponents[0].Add(inRenderComponent);
         }

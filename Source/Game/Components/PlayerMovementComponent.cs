@@ -6,6 +6,8 @@ namespace _2DPuzzle
     {
         private const float speed = 50;//100;
 
+        private PhysicsComponent physicsComponent = null;
+
         public PlayerMovementComponent(Entity inOwner) : base(inOwner)
         {
             SetCanUpdate(true);
@@ -14,6 +16,11 @@ namespace _2DPuzzle
         public override void Update(GameTime inGameTime)
         {
             base.Update(inGameTime);
+
+            if(physicsComponent == null)
+            {
+                physicsComponent =  owner.GetComponent<PhysicsComponent>();
+            }
 
             if (_transformComponent == null)
             {
@@ -28,16 +35,21 @@ namespace _2DPuzzle
 
             Vector2 movement = new Vector2(horizontal, vertical);
 
-            movement = Vector2.UnitX; //HACK
-
-            if (movement == Vector2.Zero)
+            if (movement != Vector2.Zero)
             {
-                return;
+                movement.Normalize();
             }
 
-            movement.Normalize();
+            Vector2 finalMovement = WorldManager.gravity + movement;
 
-            _transformComponent.position += UpdateManager.GetInstance().deltaTime * speed * movement;
+            physicsComponent.velocity = finalMovement;
+
+            /*_transformComponent.position += UpdateManager.GetInstance().deltaTime * speed * finalMovement;
+            
+            if(_transformComponent.position.Y >= 300)
+            {
+                _transformComponent.position.Y = 300;
+            }*/
         }
     }
 }

@@ -37,13 +37,6 @@
 /processorParam:TextureFormat=Color
 /build:Far.png
 
-#begin File.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:File.spritefont;Roboto.spritefont
-
 #begin Idle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -79,11 +72,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Player.png
-
-#begin Roboto-Regular.ttf
-/importer:
-/processor:
-/build:Roboto-Regular.ttf
 
 #begin Running/running_1.png
 /importer:TextureImporter

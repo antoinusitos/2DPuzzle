@@ -8,6 +8,10 @@ namespace _2DPuzzle
 
         public int layer = 0;
 
+        public bool flipHorizontally = false;
+
+        public SpriteEffects spriteEffects; 
+
         public RenderComponent(Entity inOwner) : base(inOwner)
         {
             canRender = true;
@@ -17,6 +21,19 @@ namespace _2DPuzzle
         public void SwitchLayer(int inLayer)
         {
             RenderManager.GetInstance().SwitchLayer(layer, inLayer, this);
+        }
+
+        public void SetFlipHorizontal(bool inFlipHorizontally)
+        {
+            flipHorizontally = inFlipHorizontally;
+            if(flipHorizontally)
+            {
+                spriteEffects = SpriteEffects.FlipHorizontally;
+            }
+            else
+            {
+                spriteEffects = SpriteEffects.None;
+            }
         }
     }
 }

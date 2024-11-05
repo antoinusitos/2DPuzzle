@@ -16,7 +16,8 @@ namespace _2DPuzzle
 
             RenderManager.GetInstance().totalBatch++;
             RenderManager.GetInstance().spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderManager.GetInstance().screenScaleMatrix);
-            RenderManager.GetInstance().spriteBatch.Draw(sprite, _transformComponent.position, Color.White);
+            //RenderManager.GetInstance().spriteBatch.Draw(sprite,  _transformComponent.position, Color.White, _transformComponent.rotation,, spriteEffects);
+            RenderManager.GetInstance().spriteBatch.Draw(sprite, new Rectangle((int)_transformComponent.position.X, (int)_transformComponent.position.Y, sprite.Width, sprite.Height), null, Color.White, _transformComponent.rotation, new Vector2(0, 0), spriteEffects, 0f);
             RenderManager.GetInstance().spriteBatch.End();
         }
     }

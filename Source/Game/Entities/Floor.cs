@@ -1,4 +1,6 @@
-﻿namespace _2DPuzzle
+﻿using Microsoft.Xna.Framework;
+
+namespace _2DPuzzle
 {
     public class Floor : Entity
     {
@@ -6,8 +8,16 @@
         {
             name = "Floor";
 
-            SpriteRenderComponent spriteRenderComponent = new SpriteRenderComponent(this, "TileTest");
-            components.Add(spriteRenderComponent);
+            RectangleRenderComponent rectangleRenderComponent = new RectangleRenderComponent(this)
+            {
+                rectangle = new Rectangle(0, 300, 400, 1)
+            };
+            components.Add(rectangleRenderComponent);
+            PhysicsComponent physicsComponent = new PhysicsComponent(this)
+            {
+                rectangle = new Rectangle(0, 300, 400, 1)
+            };
+            components.Add(physicsComponent);
         }
     }
 }
