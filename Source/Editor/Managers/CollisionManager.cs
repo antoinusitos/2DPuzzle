@@ -63,7 +63,8 @@ namespace _2DPuzzle
                         float contactTime = 0;
                         if(DynamicRectVsRect(registeredComponents[physicsComponentIndex], registeredComponents[againsPhysicsComponentIndex], ref contactPoint, ref contactNormal, ref contactTime, UpdateManager.GetInstance().deltaTime))
                         {
-                            registeredComponents[physicsComponentIndex].velocity += contactNormal * new Vector2(System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.X), System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.Y)) * (1 - contactTime);
+                            // Here we are multiplying by - 1 because up tend to 0
+                            registeredComponents[physicsComponentIndex].velocity += contactNormal * -1 * new Vector2(System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.X), System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.Y)) * (1 - contactTime);
                         }
                     }
 
