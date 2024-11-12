@@ -4,7 +4,7 @@ namespace _2DPuzzle
 {
     public class StateMachineState
     {
-        public StateMachine owner = null;
+        public StateMachineComponent parentStateMachine = null;
 
         public List<StateMachineTransition> transitions = new List<StateMachineTransition>();
 
@@ -24,7 +24,7 @@ namespace _2DPuzzle
 
                 if (transitions[conditionIndex].transitionCondition.Invoke())
                 {
-                    owner.ChangeState(transitions[conditionIndex].toState);
+                    parentStateMachine.ChangeState(transitions[conditionIndex].toState);
                     return;
                 }
             }

@@ -26,17 +26,17 @@ namespace _2DPuzzle
         {
             AnimatorComponent animatorComponent = new AnimatorComponent(this);
             components.Add(animatorComponent);
-            animatorComponent.stateMachine.parameters.Add("Running", 0);
+            animatorComponent.parameters.Add("Running", 0);
 
             AnimationState idleState = new AnimationState
             {
                 spriteAnimatorRender = new SpriteAnimatorRender("Idle", 1, false),
-                owner = animatorComponent.stateMachine
+                parentStateMachine = animatorComponent
             };
             AnimationState runningState = new AnimationState
             {
                 spriteAnimatorRender = new SpriteAnimatorRender("Running/Running_", 8, true),
-                owner = animatorComponent.stateMachine
+                parentStateMachine = animatorComponent
             };
 
             StateMachineTransition idleToRunTransition = new StateMachineTransition
@@ -44,7 +44,7 @@ namespace _2DPuzzle
                 fromState = idleState,
                 toState = runningState
             };
-            idleToRunTransition.transitionCondition += () => { return animatorComponent.stateMachine.GetParameterValue("Running") > 0; };
+            idleToRunTransition.transitionCondition += () => { return animatorComponent.GetParameterValue("Running") > 0; };
             idleState.transitions.Add(idleToRunTransition);
 
             StateMachineTransition runToIdleTransition = new StateMachineTransition
@@ -52,11 +52,11 @@ namespace _2DPuzzle
                 fromState = runningState,
                 toState = idleState
             };
-            runToIdleTransition.transitionCondition += () => { return animatorComponent.stateMachine.GetParameterValue("Running") <= 0; };
+            runToIdleTransition.transitionCondition += () => { return animatorComponent.GetParameterValue("Running") <= 0; };
             runningState.transitions.Add(runToIdleTransition);
 
-            animatorComponent.stateMachine.SetStartingState(idleState);
-            animatorComponent.stateMachine.SetStartingState(idleState);
+            animatorComponent.SetStartingState(idleState);
+            animatorComponent.SetStartingState(idleState);
         }
     }
 }

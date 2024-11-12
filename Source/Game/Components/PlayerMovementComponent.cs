@@ -35,11 +35,11 @@ namespace _2DPuzzle
 
             if(horizontal != 0)
             {
-                owner.GetComponent<AnimatorComponent>().stateMachine.UpdateParameter("Running", 1);
+                owner.GetComponent<AnimatorComponent>().UpdateParameter("Running", 1);
             }
             else
             {
-                owner.GetComponent<AnimatorComponent>().stateMachine.UpdateParameter("Running", 0);
+                owner.GetComponent<AnimatorComponent>().UpdateParameter("Running", 0);
             }
 
             float vertical = InputManager.GetInstance().IsKeyDown("Up") ? -1 : 0;
