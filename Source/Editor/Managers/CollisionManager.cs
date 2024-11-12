@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace _2DPuzzle
@@ -61,13 +62,24 @@ namespace _2DPuzzle
                         Vector2 contactPoint = Vector2.Zero;
                         Vector2 contactNormal = Vector2.Zero;
                         float contactTime = 0;
-                        if(DynamicRectVsRect(registeredComponents[physicsComponentIndex], registeredComponents[againsPhysicsComponentIndex], ref contactPoint, ref contactNormal, ref contactTime, UpdateManager.GetInstance().deltaTime))
+
+                        if (registeredComponents[physicsComponentIndex].velocity.Y < -3)
                         {
+                            Debug.Log("lol");
+                        }
+                        if (DynamicRectVsRect(registeredComponents[physicsComponentIndex], registeredComponents[againsPhysicsComponentIndex], ref contactPoint, ref contactNormal, ref contactTime, UpdateManager.GetInstance().deltaTime))
+                        {
+                            Debug.Log("contactNormal:" + (contactNormal));
+                            Debug.Log("x:" + System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.X));
+                            Debug.Log("y:" + System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.Y));
+                            Debug.Log("(1 - contactTime):" + (1 - contactTime));
+
                             registeredComponents[physicsComponentIndex].velocity += contactNormal * new Vector2(System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.X), System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.Y)) * (1 - contactTime);
+                            Debug.Log("vel:" + (registeredComponents[physicsComponentIndex].velocity));
                         }
                     }
 
-                    registeredComponents[physicsComponentIndex].owner.transformComponent.position += registeredComponents[physicsComponentIndex].velocity;
+                    registeredComponents[physicsComponentIndex].owner.transformComponent.position += registeredComponents[physicsComponentIndex].velocity * UpdateManager.GetInstance().deltaTime;
                 }
             }
         }
@@ -80,6 +92,9 @@ namespace _2DPuzzle
 
         public bool RayVsRect(Vector2 inRayOrigin, Vector2 inRayDir, Rectangle inTarget, ref Vector2 contactPoint, ref Vector2 contactNormal, ref float hitNear)
         {
+            contactPoint = Vector2.Zero;
+            contactNormal = Vector2.Zero;
+
             Vector2 near = (new Vector2(inTarget.X, inTarget.Y) - inRayOrigin) / inRayDir;
             Vector2 far = (new Vector2(inTarget.X, inTarget.Y) + new Vector2(inTarget.Width, inTarget.Height) - inRayOrigin) / inRayDir;
 
@@ -101,7 +116,7 @@ namespace _2DPuzzle
             hitNear = MathHelper.Max(near.X, near.Y);
             float hitFar = MathHelper.Min(far.X, far.Y);
 
-            if (hitFar < 0) return false;
+            if (hitFar <= 0) return false;
 
             contactPoint = inRayOrigin + hitNear * inRayDir;
 
@@ -120,11 +135,11 @@ namespace _2DPuzzle
             {
                 if (inRayDir.Y < 0)
                 {
-                    contactNormal = -Vector2.UnitY;
+                    contactNormal = Vector2.UnitY;
                 }
                 else
                 {
-                    contactNormal = Vector2.UnitY;
+                    contactNormal = -Vector2.UnitY;
                 }
             }
 
@@ -138,15 +153,13 @@ namespace _2DPuzzle
                 return false;
             }
 
-            Vector2 pos = new Vector2(inTarget.rectangle.X, inTarget.rectangle.Y);
-            pos -= new Vector2(inRect1.rectangle.Width, inRect1.rectangle.Height) / 2;
-            Vector2 size = new Vector2(inTarget.rectangle.Width, inTarget.rectangle.Height);
-            size.X += inRect1.rectangle.Width;
-            size.Y += inRect1.rectangle.Height;
+            Vector2 pos = new Vector2(inTarget.rectangle.X, inTarget.rectangle.Y) - new Vector2(inRect1.rectangle.Width, inRect1.rectangle.Height) / 2;
+            Vector2 size = new Vector2(inTarget.rectangle.Width, inTarget.rectangle.Height) + new Vector2(inRect1.rectangle.Width, inRect1.rectangle.Height);
+
             Rectangle expandedTarget = new Rectangle((int)pos.X, (int)pos.Y, (int)size.X, (int)size.Y);
 
-            if(RayVsRect(new Vector2(inRect1.rectangle.X, inRect1.rectangle.Y) + new Vector2(inRect1.rectangle.Width, inRect1.rectangle.Height) / 2,
-                inRect1.velocity * elapsedTime, expandedTarget, ref contactPoint, ref contactNormal, ref contactTime))
+            if (RayVsRect(new Vector2(inRect1.rectangle.X, inRect1.rectangle.Y) + new Vector2(inRect1.rectangle.Width, inRect1.rectangle.Height) / 2,
+                (inRect1.velocity * elapsedTime), expandedTarget, ref contactPoint, ref contactNormal, ref contactTime))
             {
                 if(contactTime <= 1.0f)
                 {

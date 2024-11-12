@@ -10,12 +10,12 @@ namespace _2DPuzzle
 
             RectangleRenderComponent rectangleRenderComponent = new RectangleRenderComponent(this)
             {
-                rectangle = new Rectangle(0, 300, 400, 10)
+                rectangle = new Rectangle(75, 300, 50, 50)
             };
             components.Add(rectangleRenderComponent);
             PhysicsComponent physicsComponent = new PhysicsComponent(this)
             {
-                rectangle = new Rectangle(0, 300, 400, 10)
+                rectangle = new Rectangle(75, 300, 50, 50)
             };
             components.Add(physicsComponent);
         }

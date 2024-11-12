@@ -7,6 +7,7 @@ namespace _2DPuzzle
     {
         public Rectangle rectangle;
         public Texture2D whiteRectangle;
+        public Color color = Color.White;
 
         public RectangleRenderComponent(Entity inOwner) : base(inOwner)
         {
@@ -20,7 +21,7 @@ namespace _2DPuzzle
 
             RenderManager.GetInstance().totalBatch++;
             RenderManager.GetInstance().spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderManager.GetInstance().screenScaleMatrix);
-            RenderManager.GetInstance().spriteBatch.Draw(whiteRectangle, rectangle, Color.White);
+            RenderManager.GetInstance().spriteBatch.Draw(whiteRectangle, rectangle, color * 0.5f);
             RenderManager.GetInstance().spriteBatch.End();
         }
     }

@@ -11,6 +11,7 @@ namespace _2DPuzzle
             { "Down", Keys.S },
             { "Right", Keys.D },
             { "Left", Keys.Q },
+            { "Jump", Keys.Space },
         };
     }
 }

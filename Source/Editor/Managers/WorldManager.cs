@@ -37,6 +37,6 @@ namespace _2DPuzzle
             return _instance;
         }
 
-        public static Vector2 gravity = new Vector2(0, 9.8f / 2);//new Vector2(0, 1);
+        public static Vector2 gravity = new Vector2(0, 9.8f);//new Vector2(0, 1);
     }
 }

@@ -8,6 +8,8 @@ namespace _2DPuzzle
 
         private PhysicsComponent physicsComponent = null;
 
+        private bool isJumping = false;
+
         public PlayerMovementComponent(Entity inOwner) : base(inOwner)
         {
             SetCanUpdate(true);
@@ -20,6 +22,7 @@ namespace _2DPuzzle
             if(physicsComponent == null)
             {
                 physicsComponent =  owner.GetComponent<PhysicsComponent>();
+                physicsComponent.mass = 1;
             }
 
             if (_transformComponent == null)
@@ -29,6 +32,15 @@ namespace _2DPuzzle
 
             float horizontal = InputManager.GetInstance().IsKeyDown("Right") ? 1 : 0;
             horizontal += InputManager.GetInstance().IsKeyDown("Left") ? -1 : 0;
+
+            if(horizontal != 0)
+            {
+                owner.GetComponent<AnimatorComponent>().stateMachine.UpdateParameter("Running", 1);
+            }
+            else
+            {
+                owner.GetComponent<AnimatorComponent>().stateMachine.UpdateParameter("Running", 0);
+            }
 
             float vertical = InputManager.GetInstance().IsKeyDown("Up") ? -1 : 0;
             vertical += InputManager.GetInstance().IsKeyDown("Down") ? 1 : 0;
@@ -40,9 +52,15 @@ namespace _2DPuzzle
                 movement.Normalize();
             }
 
-            Vector2 finalMovement = WorldManager.gravity + movement * speed * UpdateManager.GetInstance().deltaTime;
+            if (InputManager.GetInstance().IsKeyDown("Jump"))
+            {
+                isJumping = true;
+                movement = -Vector2.UnitY * 10;
+            }
 
-            physicsComponent.velocity = finalMovement;
+            Vector2 finalMovement = WorldManager.gravity * physicsComponent.mass * UpdateManager.GetInstance().deltaTime + movement * speed * UpdateManager.GetInstance().deltaTime;
+
+            physicsComponent.velocity += finalMovement;
 
             /*_transformComponent.position += UpdateManager.GetInstance().deltaTime * speed * finalMovement;
             

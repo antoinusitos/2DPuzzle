@@ -10,7 +10,7 @@ namespace _2DPuzzle
 
             Player player = new Player();
             entities.Add(player);
-            player.GetComponent<TransformComponent>().position = new Vector2(100, 250);
+            player.GetComponent<TransformComponent>().position = new Vector2(100, 100);
 
             ParallaxAsset parallaxAssetFar = new ParallaxAsset("Far");
             parallaxAssetFar.GetComponent<SpriteRenderComponent>().SwitchLayer(-3);
@@ -29,7 +29,10 @@ namespace _2DPuzzle
 
             Floor floor = new Floor();
             entities.Add(floor);
-            floor.GetComponent<TransformComponent>().position = new Vector2(0, 300);
+            floor.GetComponent<TransformComponent>().position = new Vector2(75 , 300);
+
+            DebugRectangle debugRectangle = new DebugRectangle(new Vector2(67, 288), new Vector2(65, 34));
+            entities.Add(debugRectangle);
 
             /*Floor floor = new Floor();
             entities.Add(floor);
