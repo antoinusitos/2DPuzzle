@@ -22,7 +22,6 @@ namespace _2DPuzzle
             if(physicsComponent == null)
             {
                 physicsComponent =  owner.GetComponent<PhysicsComponent>();
-                physicsComponent.mass = 1;
             }
 
             if (_transformComponent == null)
@@ -55,19 +54,12 @@ namespace _2DPuzzle
             if (InputManager.GetInstance().IsKeyDown("Jump"))
             {
                 isJumping = true;
-                movement = -Vector2.UnitY * 10;
+                movement = -Vector2.UnitY * 5;
             }
 
             Vector2 finalMovement = WorldManager.gravity * physicsComponent.mass * UpdateManager.GetInstance().deltaTime + movement * speed * UpdateManager.GetInstance().deltaTime;
 
             physicsComponent.velocity += finalMovement;
-
-            /*_transformComponent.position += UpdateManager.GetInstance().deltaTime * speed * finalMovement;
-            
-            if(_transformComponent.position.Y >= 300)
-            {
-                _transformComponent.position.Y = 300;
-            }*/
         }
     }
 }

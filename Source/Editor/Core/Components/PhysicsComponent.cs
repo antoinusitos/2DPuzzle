@@ -27,8 +27,7 @@ namespace _2DPuzzle
         {
             CollisionManager.GetInstance().RegisterPhysicsComponent(this);
             canUpdate = true;
-            /*canRender = true;
-            RenderManager.GetInstance().RegisterRenderer(this);*/
+            RenderManager.GetInstance().RegisterRenderer(this);
 
             whiteRectangle = new Texture2D(RenderManager.GetInstance().graphicsDevice, 1, 1);
             whiteRectangle.SetData(new[] { Color.White });
@@ -45,16 +44,11 @@ namespace _2DPuzzle
 
             rectangle.X = (int)owner.transformComponent.position.X;
             rectangle.Y = (int)owner.transformComponent.position.Y;
-        }
 
-        public override void Render(GameTime inGameTime)
-        {
-            base.Render(inGameTime);
-
-            RenderManager.GetInstance().totalBatch++;
-            RenderManager.GetInstance().spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderManager.GetInstance().screenScaleMatrix);
-            RenderManager.GetInstance().spriteBatch.Draw(whiteRectangle, rectangle, Color.White);
-            RenderManager.GetInstance().spriteBatch.End();
+            Debug.DrawLine(new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y), Color.Green);
+            Debug.DrawLine(new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X, rectangle.Y + rectangle.Height), Color.Green);
+            Debug.DrawLine(new Vector2(rectangle.X + rectangle.Width, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), Color.Green);
+            Debug.DrawLine(new Vector2(rectangle.X, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), Color.Green);
         }
     }
 }

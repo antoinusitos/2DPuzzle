@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace _2DPuzzle
 {
@@ -64,5 +65,16 @@ namespace _2DPuzzle
 
             return false;
         }*/
+
+        public Vector2 GetMousePositionScreen()
+        {
+            return new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+        }
+
+        public Vector2 GetMousePositionWorld()
+        {
+            Matrix inverseTransform = Matrix.Invert(RenderManager.GetInstance().screenScaleMatrix);
+            return Vector2.Transform(new Vector2(Mouse.GetState().X, Mouse.GetState().Y), inverseTransform);
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace _2DPuzzle
             entities.Add(parallaxAssetClose);
 
             DebugMousePosition debugMousePosition = new DebugMousePosition();
-            debugMousePosition.transformComponent.position = new Vector2(RenderManager.GetInstance().GetScreenWidth() - 150, 10);
+            debugMousePosition.transformComponent.position = new Vector2(RenderManager.GetInstance().GetScreenWidth() - 300, 10);
 
             Floor floor = new Floor();
             entities.Add(floor);

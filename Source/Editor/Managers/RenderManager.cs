@@ -116,6 +116,8 @@ namespace _2DPuzzle
                 }
             }
 
+            Debug.RenderLines();
+
             //Debug.Log("Batch :" + totalBatch);
         }
 

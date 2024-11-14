@@ -16,7 +16,8 @@ namespace _2DPuzzle
 
             PhysicsComponent physicsComponent = new PhysicsComponent(this)
             {
-                rectangle = new Rectangle(0, 0, 15, 24)
+                rectangle = new Rectangle(0, 0, 15, 24),
+                mass = 10
             };
             physicsComponent.SetCollisionType(CollisionType.DYNAMIC);
             components.Add(physicsComponent);

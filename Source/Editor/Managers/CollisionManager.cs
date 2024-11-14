@@ -67,6 +67,17 @@ namespace _2DPuzzle
                         {
                             Debug.Log("lol");
                         }
+
+                        if(RayVsRect(Vector2.Zero, InputManager.GetInstance().GetMousePositionWorld(), registeredComponents[againsPhysicsComponentIndex].rectangle, ref contactPoint, ref contactNormal, ref contactTime))
+                        {
+                            Debug.DrawLine(Vector2.Zero, InputManager.GetInstance().GetMousePositionWorld(), Color.Red);
+                            Debug.DrawLine(contactPoint, contactPoint + contactNormal * 10, Color.Blue);
+                        }
+                        else
+                        {
+                            Debug.DrawLine(Vector2.Zero, InputManager.GetInstance().GetMousePositionWorld(), Color.White);
+                        }
+
                         if (DynamicRectVsRect(registeredComponents[physicsComponentIndex], registeredComponents[againsPhysicsComponentIndex], ref contactPoint, ref contactNormal, ref contactTime, UpdateManager.GetInstance().deltaTime))
                         {
                             Debug.Log("contactNormal:" + (contactNormal));
