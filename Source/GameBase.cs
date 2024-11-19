@@ -16,6 +16,7 @@ namespace _2DPuzzle
         protected LevelManager _levelManager = null;
         protected CollisionManager _collisionManager = null;
         protected WorldManager _worldManager = null;
+        protected SoundManager _soundManager = null;
 
         protected bool _isResizing = false;
 
@@ -48,6 +49,8 @@ namespace _2DPuzzle
             _levelManager.InitializeManager();
             _collisionManager = CollisionManager.GetInstance();
             _worldManager = WorldManager.GetInstance();
+            _soundManager = SoundManager.GetInstance();
+            _soundManager.InitializeManager();
 
             base.Initialize();
         }

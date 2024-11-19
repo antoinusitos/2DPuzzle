@@ -34,12 +34,7 @@ namespace _2DPuzzle
             DebugRectangle debugRectangle = new DebugRectangle(new Vector2(67, 288), new Vector2(65, 34));
             entities.Add(debugRectangle);
 
-            /*Floor floor = new Floor();
-            entities.Add(floor);
-            floor.GetComponent<TransformComponent>().position.Y = 100;
-
-            DebugBackground debugBackground = new DebugBackground();
-            entities.Add(debugBackground);*/
+            SoundManager.GetInstance().PlaySound("");
         }
     }
 }
