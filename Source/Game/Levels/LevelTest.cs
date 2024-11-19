@@ -35,6 +35,14 @@ namespace _2DPuzzle
             entities.Add(debugRectangle);
 
             SoundManager.GetInstance().PlaySound("");
+
+            SaveManager.GetInstance().LoadAll();
+
+            /*SaveManager.GetInstance().SaveBool("test bool", false);
+            SaveManager.GetInstance().SaveBool("testBool2", true);
+            SaveManager.GetInstance().SaveInt("testInt", 9);
+            SaveManager.GetInstance().SaveFloat("testFloat", 3.33f);
+            SaveManager.GetInstance().SaveAll();*/
         }
     }
 }
