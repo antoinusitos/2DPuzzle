@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace _2DPuzzle
@@ -63,11 +62,6 @@ namespace _2DPuzzle
                         Vector2 contactNormal = Vector2.Zero;
                         float contactTime = 0;
 
-                        if (registeredComponents[physicsComponentIndex].velocity.Y < -3)
-                        {
-                            Debug.Log("lol");
-                        }
-
                         if(RayVsRect(Vector2.Zero, InputManager.GetInstance().GetMousePositionWorld(), registeredComponents[againsPhysicsComponentIndex].rectangle, ref contactPoint, ref contactNormal, ref contactTime))
                         {
                             Debug.DrawLine(Vector2.Zero, InputManager.GetInstance().GetMousePositionWorld(), Color.Red);
@@ -80,13 +74,7 @@ namespace _2DPuzzle
 
                         if (DynamicRectVsRect(registeredComponents[physicsComponentIndex], registeredComponents[againsPhysicsComponentIndex], ref contactPoint, ref contactNormal, ref contactTime, UpdateManager.GetInstance().deltaTime))
                         {
-                            Debug.Log("contactNormal:" + (contactNormal));
-                            Debug.Log("x:" + System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.X));
-                            Debug.Log("y:" + System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.Y));
-                            Debug.Log("(1 - contactTime):" + (1 - contactTime));
-
                             registeredComponents[physicsComponentIndex].velocity += contactNormal * new Vector2(System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.X), System.Math.Abs(registeredComponents[physicsComponentIndex].velocity.Y)) * (1 - contactTime);
-                            Debug.Log("vel:" + (registeredComponents[physicsComponentIndex].velocity));
                         }
                     }
 

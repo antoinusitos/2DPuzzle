@@ -36,7 +36,7 @@ namespace _2DPuzzle
 
             SoundManager.GetInstance().PlaySound("");
 
-            SaveManager.GetInstance().LoadAll();
+            //SaveManager.GetInstance().LoadAll();
 
             /*SaveManager.GetInstance().SaveBool("test bool", false);
             SaveManager.GetInstance().SaveBool("testBool2", true);

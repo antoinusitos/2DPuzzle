@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35514.174 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2DPuzzle", "2DPuzzle.csproj", "{8555C297-90D4-4771-9DCB-C1413AF62AD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2DPuzzle", "2DPuzzle.csproj", "{8555C297-90D4-4771-9DCB-C1413AF62AD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monogame.ImGuiNet", "MonoGame.ImGuiNet-main\MonoGame.ImGuiNet\Monogame.ImGuiNet.csproj", "{4F6F8908-BBCE-4F86-85E5-A4E264E10FDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{8555C297-90D4-4771-9DCB-C1413AF62AD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8555C297-90D4-4771-9DCB-C1413AF62AD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8555C297-90D4-4771-9DCB-C1413AF62AD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F6F8908-BBCE-4F86-85E5-A4E264E10FDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F6F8908-BBCE-4F86-85E5-A4E264E10FDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F6F8908-BBCE-4F86-85E5-A4E264E10FDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F6F8908-BBCE-4F86-85E5-A4E264E10FDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
