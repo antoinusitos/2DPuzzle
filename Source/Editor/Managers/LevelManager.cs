@@ -56,5 +56,10 @@ namespace _2DPuzzle
                 currentLevel = inLevel;
             }
         }
+
+        public void SaveLevel()
+        {
+            currentLevel.Save();
+        }
     }
 }

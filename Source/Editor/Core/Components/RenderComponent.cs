@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 
 namespace _2DPuzzle
 {
     public class RenderComponent : EntityComponent
     {
+        [JsonIgnore]
         public Texture2D sprite = null;
 
         public int layer = 0;

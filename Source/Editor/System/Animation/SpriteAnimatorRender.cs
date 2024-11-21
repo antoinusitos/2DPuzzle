@@ -1,12 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace _2DPuzzle
 {
     public class SpriteAnimatorRender
     {
+        [JsonIgnore]
         public List<Texture2D> sprites = null;
+        public string spritePath = "";
         public bool loop = true;
         public int frameLength = 5;
 
@@ -17,6 +19,7 @@ namespace _2DPuzzle
         {
             loop = inLoop;
             sprites = new List<Texture2D>();
+            spritePath = inSpritePath;
 
             if(inFrameNumber == 1)
             {
@@ -47,6 +50,11 @@ namespace _2DPuzzle
                     _currentIndex = 0;
                 }
             }
+        }
+
+        public int GetCurrentIndex()
+        { 
+            return _currentIndex; 
         }
 
         public Texture2D GetCurrentSprite()

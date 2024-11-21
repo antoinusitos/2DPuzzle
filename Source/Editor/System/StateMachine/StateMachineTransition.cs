@@ -1,4 +1,6 @@
-﻿namespace _2DPuzzle
+﻿using Newtonsoft.Json;
+
+namespace _2DPuzzle
 {
     public delegate bool TransitionCondition();
 
@@ -7,6 +9,7 @@
         public StateMachineState fromState = null;
         public StateMachineState toState = null;
 
+        [JsonIgnore]
         public TransitionCondition transitionCondition;
     }
 }

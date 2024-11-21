@@ -5,8 +5,11 @@ namespace _2DPuzzle
 {
     public class SpriteRenderComponent : RenderComponent
     {
+        public string spritePath = "";
+
         public SpriteRenderComponent(Entity inOwner, string inSpritePath) : base(inOwner)
         {
+            spritePath = inSpritePath;
             sprite = RenderManager.GetInstance().content.Load<Texture2D>(inSpritePath);
         }
 

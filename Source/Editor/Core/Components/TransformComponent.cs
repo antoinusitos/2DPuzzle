@@ -4,9 +4,9 @@ namespace _2DPuzzle
 {
     public class TransformComponent : EntityComponent
     {
-        public Vector2 position = Vector2.Zero;
-        public float rotation = 0;
-        public Vector2 scale = Vector2.One;
+        public Vector2 position { get; set; } = Vector2.Zero;
+        public float rotation { get; set; } = 0;
+        public Vector2 scale { get; set; } = Vector2.One;
 
         public TransformComponent(Entity inOwner) : base(inOwner)
         {
@@ -16,6 +16,20 @@ namespace _2DPuzzle
         public void PrintPosition()
         {
             Debug.Log("X:" + position.X + " | " + "Y:" + position.Y, owner);
+        }
+
+        public override string ComponentToString()
+        {
+            return "Position:" + position + "\n" + 
+                    "Rotation:" + rotation + "\n" + 
+                    "Scale:" + scale;
+        }
+
+        public override string Save()
+        {
+            return "TransformComponent\n[\n{position:" + position + "}\n" +
+                    "{rotation:" + rotation + "}\n" +
+                    "{scale:" + scale + "}\n]";
         }
     }
 }

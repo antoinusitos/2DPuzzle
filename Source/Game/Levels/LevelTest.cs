@@ -8,6 +8,8 @@ namespace _2DPuzzle
         {
             base.InitializeLevel();
 
+            name = "LevelTest";
+
             Player player = new Player();
             entities.Add(player);
             player.GetComponent<TransformComponent>().position = new Vector2(100, 100);
@@ -23,9 +25,6 @@ namespace _2DPuzzle
             ParallaxAsset parallaxAssetClose = new ParallaxAsset("Close");
             parallaxAssetClose.GetComponent<SpriteRenderComponent>().SwitchLayer(-1);
             entities.Add(parallaxAssetClose);
-
-            DebugMousePosition debugMousePosition = new DebugMousePosition();
-            debugMousePosition.transformComponent.position = new Vector2(0, RenderManager.GetInstance().GetScreenHeight() - 20);
 
             Floor floor = new Floor();
             entities.Add(floor);

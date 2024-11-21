@@ -24,5 +24,10 @@ namespace _2DPuzzle
             RenderManager.GetInstance().spriteBatch.Draw(spriteAnimatorRender.GetCurrentSprite(), _transformComponent.position, Color.White);
             RenderManager.GetInstance().spriteBatch.End();
         }
+
+        public override string ComponentToString()
+        {
+            return "Current Frame:" + spriteAnimatorRender.GetCurrentIndex();
+        }
     }
 }

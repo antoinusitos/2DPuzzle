@@ -39,5 +39,10 @@ namespace _2DPuzzle
             currentState = startingState;
             currentAnimationState = (AnimationState)currentState;
         }
+
+        public override string ComponentToString()
+        {
+            return "Current Frame:" + currentAnimationState.spriteAnimatorRender.GetCurrentIndex();
+        }
     }
 }

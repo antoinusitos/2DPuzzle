@@ -44,24 +44,25 @@ namespace _2DPuzzle
 
         private ImGuiRenderer guiRenderer;
 
-        private bool toolActive = false;
-        private System.Numerics.Vector4 colorV4;
-
         private bool consoleActive = false;
 
         private bool openLevelActive = false;
 
         public bool isPlaying = false;
 
+        private Entity inspectedEntity = null;
+
+        private DebugMousePosition debugMousePosition = null;
+
         public void InitializeManager(GameBase inGameBase)
         {
             gameBase = inGameBase;
 
             guiRenderer = new ImGuiRenderer(gameBase);
-            Vector4 vec = Color.CornflowerBlue.ToVector4();
-            colorV4 = new System.Numerics.Vector4(vec.X, vec.Y, vec.Z, vec.W);
-
             guiRenderer.RebuildFontAtlas();
+
+            debugMousePosition = new DebugMousePosition();
+            debugMousePosition.transformComponent.position = new Vector2(0, RenderManager.GetInstance().GetScreenHeight() - 20);
         }
 
         public void RenderWindows(GameTime inGameTime)
@@ -79,6 +80,8 @@ namespace _2DPuzzle
             RenderOpenMenu();
 
             guiRenderer.EndLayout();
+
+            debugMousePosition.components[1].Update(inGameTime);
         }
 
         private void RenderHeader()
@@ -91,7 +94,7 @@ namespace _2DPuzzle
                 if (ImGui.BeginMenu("File"))
                 {
                     if (ImGui.MenuItem("Open", "Ctrl+O")) { openLevelActive = true; }
-                    if (ImGui.MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
+                    if (ImGui.MenuItem("Save", "Ctrl+S")) { LevelManager.GetInstance().SaveLevel(); }
                     if (ImGui.MenuItem("Close", "Ctrl+W")) { gameBase.Exit(); }
                     ImGui.EndMenu();
                 }
@@ -99,6 +102,8 @@ namespace _2DPuzzle
                 {
                     consoleActive = true;
                     Debug.Log("Opening Console");
+                    Debug.LogWarning("Opening Console");
+                    Debug.LogError("Opening Console");
                 }
                 if(!isPlaying)
                 {
@@ -124,7 +129,24 @@ namespace _2DPuzzle
             ImGui.SetNextWindowPos(new System.Numerics.Vector2(0, 20));
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(300, RenderManager.GetInstance().GetScreenHeight() - 40));
             ImGui.Begin("Hierarchy", ImGuiWindowFlags.NoMove);
-
+            ImGui.BeginChild("Scrolling", new System.Numerics.Vector2(0), ImGuiChildFlags.None);
+            if (LevelManager.GetInstance().currentLevel != null)
+            {
+                for (int textIndex = 0; textIndex < LevelManager.GetInstance().currentLevel.entities.Count; textIndex++)
+                {
+                    string current = "";
+                    if(inspectedEntity == LevelManager.GetInstance().currentLevel.entities[textIndex])
+                    {
+                        current = "         (Inspected)";
+                    }
+                    if (ImGui.MenuItem(LevelManager.GetInstance().currentLevel.entities[textIndex].name + current))
+                    {
+                        inspectedEntity = LevelManager.GetInstance().currentLevel.entities[textIndex];
+                        Debug.Log("Clicked on " + LevelManager.GetInstance().currentLevel.entities[textIndex].name);
+                    }
+                }
+            }
+            ImGui.EndChild();
             ImGui.End();
         }
 
@@ -133,7 +155,18 @@ namespace _2DPuzzle
             ImGui.SetNextWindowPos(new System.Numerics.Vector2(RenderManager.GetInstance().GetScreenWidth() - 300, 20));
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(300, RenderManager.GetInstance().GetScreenHeight() - 40));
             ImGui.Begin("Inspector", ImGuiWindowFlags.NoMove);
-
+            if(inspectedEntity != null)
+            {
+                ImGui.Text(inspectedEntity.name);
+                for(int componentIndex = 0; componentIndex < inspectedEntity.components.Count; componentIndex++)
+                {
+                    string componentName = inspectedEntity.components[componentIndex].GetType().ToString();
+                    componentName = componentName.Remove(0, 10);
+                    ImGui.Text("");
+                    ImGui.BulletText(componentName);
+                    ImGui.Text(inspectedEntity.components[componentIndex].ComponentToString());
+                }
+            }
             ImGui.End();
         }
 
@@ -148,7 +181,21 @@ namespace _2DPuzzle
             ImGui.BeginChild("Scrolling", new System.Numerics.Vector2(0), ImGuiChildFlags.None);
             for (int textIndex = 0; textIndex < Debug.allDebug.Count; textIndex++)
             {
-                ImGui.Text(Debug.allDebug[textIndex]);
+                System.Numerics.Vector4 color = new System.Numerics.Vector4(0, 0, 0, 1);
+                if(Debug.allDebug[textIndex].severity == 2)
+                {
+                    color.X = 255;
+                }
+                else if (Debug.allDebug[textIndex].severity == 1)
+                {
+                    color.X = 255;
+                    color.Y = 255;
+                }
+                else
+                {
+                    color = System.Numerics.Vector4.One;
+                }
+                ImGui.TextColored(color, Debug.allDebug[textIndex].text);
             }
             ImGui.EndChild();
             ImGui.End();

@@ -61,5 +61,17 @@ namespace _2DPuzzle
 
             physicsComponent.velocity += finalMovement;
         }
+
+        public override string ComponentToString()
+        {
+            return "isJumping:" + isJumping + "\n" +
+                    "speed:" + speed;
+        }
+
+        public override string Save()
+        {
+            return "PlayerMovementComponent\n[\n{isJumping:" + isJumping + "}\n" +
+                    "{speed:" + speed + "}\n]";
+        }
     }
 }

@@ -5,9 +5,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _2DPuzzle
 {
+    public class ConsoleDebug
+    {
+        public int severity = -1; //0:normal, 1:warning, 2:error
+        public string text = "";
+    }
+
     public class Debug
     {
-        public static List<string> allDebug = new List<string>();
+        public static List<ConsoleDebug> allDebug = new List<ConsoleDebug>();
 
         public static void Log(string inMessage, Entity inEntity = null)
         {
@@ -16,8 +22,8 @@ namespace _2DPuzzle
             {
                 name = inEntity.name;
             }
-            System.Diagnostics.Debug.WriteLine(name + ":" + inMessage);
-            allDebug.Add(name + ":" + inMessage);
+            System.Diagnostics.Debug.WriteLine("Log : " + name + " : " + inMessage);
+            allDebug.Add(new ConsoleDebug() { severity = 0, text = "Log : " + name + " : " + inMessage });
         }
 
         public static void LogError(string inMessage, Entity inEntity = null)
@@ -27,8 +33,8 @@ namespace _2DPuzzle
             {
                 name = inEntity.name;
             }
-            System.Diagnostics.Debug.WriteLine("Error : " + name + ":" + inMessage);
-            allDebug.Add("Error : " + name + ":" + inMessage);
+            System.Diagnostics.Debug.WriteLine("Error : " + name + " : " + inMessage);
+            allDebug.Add(new ConsoleDebug() { severity = 2, text = "Error : " + name + " : " + inMessage });
         }
 
         public static void LogWarning(string inMessage, Entity inEntity = null)
@@ -38,8 +44,8 @@ namespace _2DPuzzle
             {
                 name = inEntity.name;
             }
-            System.Diagnostics.Debug.WriteLine("Warning : " + name + ":" + inMessage);
-            allDebug.Add("Warning : " + name + ":" + inMessage);
+            System.Diagnostics.Debug.WriteLine("Warning : " + name + " : " + inMessage);
+            allDebug.Add(new ConsoleDebug() { severity = 1, text = "Warning : " + name + " : " + inMessage });
         }
 
         public static List<LineDrawing> linesToDraw = new List<LineDrawing>();

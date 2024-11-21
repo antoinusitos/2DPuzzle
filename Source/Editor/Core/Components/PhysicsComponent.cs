@@ -50,5 +50,19 @@ namespace _2DPuzzle
             Debug.DrawLine(new Vector2(rectangle.X + rectangle.Width, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), Color.Green);
             Debug.DrawLine(new Vector2(rectangle.X, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), Color.Green);
         }
+
+        public override string ComponentToString()
+        {
+            return "mass:" + mass + "\n" +
+                    "velocity:" + velocity + "\n" +
+                    "Use Gravity:" + useGravity;
+        }
+
+        public override string Save()
+        {
+            return "PhysicsComponent\n[\n{mass:" + mass + "}\n" +
+                    "{velocity:" + velocity + "}\n" +
+                    "{useGravity:" + useGravity + "}\n]";
+        }
     }
 }
