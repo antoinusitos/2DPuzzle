@@ -8,7 +8,7 @@ namespace _2DPuzzle
         {
             base.Initialize();
 
-            _levelManager.AddLevel(new LevelTest());
+            
         }
     }
 }

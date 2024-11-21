@@ -7,6 +7,8 @@ namespace _2DPuzzle
 {
     public class Debug
     {
+        public static List<string> allDebug = new List<string>();
+
         public static void Log(string inMessage, Entity inEntity = null)
         {
             string name = "";
@@ -15,6 +17,7 @@ namespace _2DPuzzle
                 name = inEntity.name;
             }
             System.Diagnostics.Debug.WriteLine(name + ":" + inMessage);
+            allDebug.Add(name + ":" + inMessage);
         }
 
         public static void LogError(string inMessage, Entity inEntity = null)
@@ -25,6 +28,7 @@ namespace _2DPuzzle
                 name = inEntity.name;
             }
             System.Diagnostics.Debug.WriteLine("Error : " + name + ":" + inMessage);
+            allDebug.Add("Error : " + name + ":" + inMessage);
         }
 
         public static void LogWarning(string inMessage, Entity inEntity = null)
@@ -35,6 +39,7 @@ namespace _2DPuzzle
                 name = inEntity.name;
             }
             System.Diagnostics.Debug.WriteLine("Warning : " + name + ":" + inMessage);
+            allDebug.Add("Warning : " + name + ":" + inMessage);
         }
 
         public static List<LineDrawing> linesToDraw = new List<LineDrawing>();

@@ -1,7 +1,5 @@
-﻿using ImGuiNET;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.ImGuiNet;
 using System;
 
 namespace _2DPuzzle
@@ -20,12 +18,9 @@ namespace _2DPuzzle
         protected WorldManager _worldManager = null;
         protected SoundManager _soundManager = null;
         protected SaveManager _saveManager = null;
+        protected EditorManager _editorManager = null;
 
         protected bool _isResizing = false;
-
-        public static ImGuiRenderer GuiRenderer;
-        bool _toolActive;
-        System.Numerics.Vector4 _colorV4;
 
         public GameBase()
         {
@@ -60,11 +55,8 @@ namespace _2DPuzzle
             _soundManager.InitializeManager();
             _saveManager = SaveManager.GetInstance();
             _saveManager.InitializeManager();
-
-            GuiRenderer = new ImGuiRenderer(this);
-            _toolActive = true;
-            Vector4 vec = Color.CornflowerBlue.ToVector4();
-            _colorV4 = new System.Numerics.Vector4(vec.X, vec.Y, vec.Z, vec.W);
+            _editorManager = EditorManager.GetInstance();
+            _editorManager.InitializeManager(this);
 
             base.Initialize();
         }
@@ -72,12 +64,15 @@ namespace _2DPuzzle
         protected override void LoadContent()
         {
             _contentManager.LoadContent();
-
-            GuiRenderer.RebuildFontAtlas();
         }
 
         protected override void Update(GameTime inGameTime)
         {
+            if(!EditorManager.GetInstance().isPlaying)
+            {
+                return;
+            }
+
             if(!_updateManager.Update(inGameTime))
             {
                 Exit();
@@ -90,47 +85,14 @@ namespace _2DPuzzle
 
         protected override void Draw(GameTime inGameTime)
         {
-            GraphicsDevice.Clear(new Color(_colorV4.X, _colorV4.Y, _colorV4.Z, _colorV4.W));
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _renderManager.totalBatch = 0;
             _renderManager.Render(inGameTime);
 
             base.Draw(inGameTime);
 
-            GuiRenderer.BeginLayout(inGameTime);
-            if (_toolActive)
-            {
-                ImGui.Begin("My First Tool", ref _toolActive, ImGuiWindowFlags.MenuBar);
-                if (ImGui.BeginMenuBar())
-                {
-                    if (ImGui.BeginMenu("File"))
-                    {
-                        if (ImGui.MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-                        if (ImGui.MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
-                        if (ImGui.MenuItem("Close", "Ctrl+W")) { _toolActive = false; }
-                        ImGui.EndMenu();
-                    }
-                    ImGui.EndMenuBar();
-                }
-
-                // Edit a color stored as 4 floats
-                ImGui.ColorEdit4("Color", ref _colorV4);
-
-                // Generate samples and plot them
-                var samples = new float[100];
-                for (var n = 0; n < samples.Length; n++)
-                    samples[n] = (float)Math.Sin(n * 0.2f + ImGui.GetTime() * 1.5f);
-                ImGui.PlotLines("Samples", ref samples[0], 100);
-
-                // Display contents in a scrolling region
-                ImGui.TextColored(new System.Numerics.Vector4(1, 1, 0, 1), "Important Stuff");
-                ImGui.BeginChild("Scrolling", new System.Numerics.Vector2(0));
-                for (var n = 0; n < 50; n++)
-                    ImGui.Text($"{n:0000}: Some text");
-                ImGui.EndChild();
-                ImGui.End();
-            }
-            GuiRenderer.EndLayout();
+            EditorManager.GetInstance().RenderWindows(inGameTime);
         }
     }
 }
