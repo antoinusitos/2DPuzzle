@@ -67,6 +67,30 @@ namespace _2DPuzzle
         public MyJsonDictionary<string, float> savedFloat = null;
     }
 
+    public class LevelEntitySave
+    {
+        public string name;
+        public uint ID;
+		public SaveData saveData;
+    }
+
+    public class LevelSave
+    {
+		public List<LevelEntitySave> entitiesSaved;
+    } 
+
+	public class ComponentSave
+    {
+		public string componentType;
+        public SaveData saveData;
+    } 
+
+    public class EntitySave
+    {
+        public string name;
+		public List<ComponentSave> componentsSaved;
+    }
+    
     public class SaveManager
     {
         private static SaveManager _instance;
