@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using static System.Formats.Asn1.AsnWriter;
+using System.Collections.Generic;
 
 namespace _2DPuzzle
 {
@@ -68,11 +70,42 @@ namespace _2DPuzzle
                     "Use Gravity:" + useGravity;
         }
 
-        public override string Save()
+        public override SavedData GetSavedData()
         {
-            return "PhysicsComponent\n[\n{mass:" + mass + "}\n" +
-                    "{velocity:" + velocity + "}\n" +
-                    "{useGravity:" + useGravity + "}\n]";
+            SavedData savedData = new SavedData
+            {
+                savedFloat = new Dictionary<string, float>
+                {
+                    { "Editor." + owner.name + ".Mass", mass },
+                },
+                savedBool = new Dictionary<string, bool>
+                {
+                    { "Editor." + owner.name + ".UseGravity", useGravity },
+                },
+                savedInt = new Dictionary<string, int>
+                {
+                    { "Editor." + owner.name + ".CollisionType", (int)collisionType },
+                }
+            };
+            return savedData;
+        }
+
+        public override void LoadSavedData(SavedData inSavedData)
+        {
+            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Mass"))
+            {
+                mass = inSavedData.savedFloat["Editor." + owner.name + ".Mass"];
+            }
+
+            if (inSavedData.savedBool.ContainsKey("Editor." + owner.name + ".UseGravity"))
+            {
+                useGravity = inSavedData.savedBool["Editor." + owner.name + ".UseGravity"];
+            }
+
+            if (inSavedData.savedInt.ContainsKey("Editor." + owner.name + ".CollisionType"))
+            {
+                collisionType = (CollisionType)inSavedData.savedInt["Editor." + owner.name + ".CollisionType"];
+            }
         }
     }
 }

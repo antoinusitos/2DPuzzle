@@ -10,6 +10,11 @@ namespace _2DPuzzle
         public StateMachineState currentState = null;
         public StateMachineState startingState = null;
 
+        public StateMachineComponent() : base()
+        {
+
+        }
+
         public StateMachineComponent(Entity inOwner) : base(inOwner)
         {
 

@@ -69,11 +69,6 @@ namespace _2DPuzzle
             return "";
         }
 
-        public virtual string Save()
-        {
-            return "EntityComponent";
-        }
-
         public virtual SavedData GetSavedData()
         {
             return new SavedData();

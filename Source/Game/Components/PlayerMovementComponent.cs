@@ -1,14 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace _2DPuzzle
 {
     public class PlayerMovementComponent : EntityComponent
     {
-        private const float speed = 100;
+        private float speed = 100;
 
         private PhysicsComponent physicsComponent = null;
 
         private bool isJumping = false;
+
+        public PlayerMovementComponent() : base()
+        {
+            SetCanUpdate(true);
+        }
 
         public PlayerMovementComponent(Entity inOwner) : base(inOwner)
         {
@@ -68,10 +74,24 @@ namespace _2DPuzzle
                     "speed:" + speed;
         }
 
-        public override string Save()
+        public override SavedData GetSavedData()
         {
-            return "PlayerMovementComponent\n[\n{isJumping:" + isJumping + "}\n" +
-                    "{speed:" + speed + "}\n]";
+            SavedData savedData = new SavedData
+            {
+                savedFloat = new Dictionary<string, float>()
+                {
+                    { "Editor." + owner.name + ".Speed", speed },
+                }
+            };
+            return savedData;
+        }
+
+        public override void LoadSavedData(SavedData inSavedData)
+        {
+            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Speed"))
+            {
+                speed = inSavedData.savedFloat["Editor." + owner.name + ".Speed"];
+            }
         }
     }
 }

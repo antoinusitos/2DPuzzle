@@ -7,6 +7,13 @@ namespace _2DPuzzle
     {
         private AnimationState currentAnimationState = null;
 
+        public AnimatorComponent() : base()
+        {
+            canUpdate = true;
+            canRender = true;
+            RenderManager.GetInstance().RegisterRenderer(this);
+        }
+
         public AnimatorComponent(Entity inOwner) : base(inOwner)
         {
             canUpdate = true;

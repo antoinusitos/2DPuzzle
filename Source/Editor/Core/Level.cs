@@ -70,12 +70,12 @@ namespace _2DPuzzle
                 }
             }
             string toSave = JsonConvert.SerializeObject(levelSave, Formatting.Indented);
-            File.WriteAllText(name + ".json", toSave);
+            File.WriteAllText("Levels/" + name + ".json", toSave);
         }
 
         public void Load(string inLevelName)
         {
-            string jsonString = File.ReadAllText(inLevelName + ".json");
+            string jsonString = File.ReadAllText("Levels/" + inLevelName + ".json");
             LevelSave levelSave = JsonConvert.DeserializeObject<LevelSave>(jsonString);
             name = levelSave.name;
             for (int entityIndex = 0; entityIndex < levelSave.entitiesCleanSaved.Count; entityIndex++)

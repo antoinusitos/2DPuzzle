@@ -177,13 +177,13 @@ namespace _2DPuzzle
                 PreserveReferencesHandling = PreserveReferencesHandling.Objects,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             });
-            File.WriteAllText(inEntity.name + ".json", entityToSave);
+            File.WriteAllText("Prefabs/" + inEntity.name + ".json", entityToSave);
         }
 
         public Entity LoadEntity(string inEntityName)
         {
             Entity entity = new Entity();
-            string jsonString = File.ReadAllText(inEntityName + ".json");
+            string jsonString = File.ReadAllText("Prefabs/" + inEntityName + ".json");
             EntitySave entitySave = JsonConvert.DeserializeObject<EntitySave>(jsonString);
             entity.name = entitySave.name;
             for(int componentIndex = 0; componentIndex < entitySave.componentsSaved.Count; componentIndex++)

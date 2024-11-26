@@ -17,7 +17,6 @@ namespace _2DPuzzle
             player.InitializeNewEntity();
             entities.Add(player);
             player.GetComponent<TransformComponent>().position = new Vector2(100, 100);
-            player.differFromPrefab = true;
 
             ParallaxAsset parallaxAssetFar = new ParallaxAsset("Far");
             parallaxAssetFar.GetComponent<SpriteRenderComponent>().SwitchLayer(-3);
@@ -32,7 +31,6 @@ namespace _2DPuzzle
             entities.Add(parallaxAssetClose);
 
             Floor floor = new Floor();
-            floor.InitializeNewEntity();
             entities.Add(floor);
             floor.GetComponent<TransformComponent>().position = new Vector2(75 , 300);
 

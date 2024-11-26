@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace _2DPuzzle
 {
@@ -7,9 +8,16 @@ namespace _2DPuzzle
     {
         public SpriteAnimatorRender spriteAnimatorRender = null;
 
+        private bool loop = false;
+        private int frameNumber = 0;
+        private string spritePath = "";
+
         public SpriteAnimatorRenderComponent(Entity inOwner, string inSpritePath, int inFrameNumber, bool inLoop) : base(inOwner)
         {
-            spriteAnimatorRender = new SpriteAnimatorRender(inSpritePath, inFrameNumber, inLoop);
+            loop = inLoop;
+            frameNumber = inFrameNumber;
+            spritePath = inSpritePath;
+            LoadSpriteAnimatorRender();
         }
 
         public override void Render(GameTime inGameTime)
@@ -25,9 +33,54 @@ namespace _2DPuzzle
             RenderManager.GetInstance().spriteBatch.End();
         }
 
+        private void LoadSpriteAnimatorRender()
+        {
+            spriteAnimatorRender = new SpriteAnimatorRender(spritePath, frameNumber, loop);
+        }
+
         public override string ComponentToString()
         {
             return "Current Frame:" + spriteAnimatorRender.GetCurrentIndex();
+        }
+
+        public override SavedData GetSavedData()
+        {
+            SavedData savedData = new SavedData
+            {
+                savedString = new Dictionary<string, string>
+                {
+                    { "Editor." + owner.name + ".SpritePath", spritePath },
+                },
+                savedBool = new Dictionary<string, bool>
+                {
+                    { "Editor." + owner.name + ".Loop", loop },
+                },
+                savedInt = new Dictionary<string, int>
+                {
+                    { "Editor." + owner.name + ".FrameNumber", frameNumber },
+                }
+            };
+            return savedData;
+        }
+
+        public override void LoadSavedData(SavedData inSavedData)
+        {
+            if (inSavedData.savedString.ContainsKey("Editor." + owner.name + ".SpritePath"))
+            {
+                spritePath = inSavedData.savedString["Editor." + owner.name + ".SpritePath"];
+            }
+
+            if (inSavedData.savedBool.ContainsKey("Editor." + owner.name + ".Loop"))
+            {
+                loop = inSavedData.savedBool["Editor." + owner.name + ".Loop"];
+            }
+
+            if (inSavedData.savedInt.ContainsKey("Editor." + owner.name + ".FrameNumber"))
+            {
+                frameNumber = inSavedData.savedInt["Editor." + owner.name + ".FrameNumber"];
+            }
+
+            LoadSpriteAnimatorRender();
         }
     }
 }

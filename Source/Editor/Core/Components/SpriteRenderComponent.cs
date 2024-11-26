@@ -35,6 +35,11 @@ namespace _2DPuzzle
             RenderManager.GetInstance().spriteBatch.End();
         }
 
+        public override string ComponentToString()
+        {
+            return "spritePath:" + spritePath;
+        }
+
         public override SavedData GetSavedData()
         {
             SavedData savedData = new SavedData

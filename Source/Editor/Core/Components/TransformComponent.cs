@@ -35,13 +35,6 @@ namespace _2DPuzzle
                     "Scale:" + scale;
         }
 
-        public override string Save()
-        {
-            return "TransformComponent\n[\n{position:" + position + "}\n" +
-                    "{rotation:" + rotation + "}\n" +
-                    "{scale:" + scale + "}\n]";
-        }
-
         public override SavedData GetSavedData()
         {
             SavedData savedData = new SavedData
