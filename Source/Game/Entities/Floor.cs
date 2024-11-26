@@ -4,7 +4,7 @@ namespace _2DPuzzle
 {
     public class Floor : Entity
     {
-        public Floor()
+        public Floor(bool inInitializeNewEntity = true) : base(inInitializeNewEntity)
         {
             name = "Floor";
 

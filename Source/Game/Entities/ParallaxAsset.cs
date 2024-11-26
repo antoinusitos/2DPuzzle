@@ -2,11 +2,13 @@
 {
     public class ParallaxAsset : Entity
     {
-        public ParallaxAsset(string inAssetNAme)
+        protected string assetNAme = "";
+
+        public ParallaxAsset(string inAssetNAme, bool inInitializeNewEntity = true) : base(inInitializeNewEntity)
         {
             name = "Parallax-" + inAssetNAme;
-
-            components.Add(new SpriteRenderComponent(this, inAssetNAme));
+            assetNAme = inAssetNAme;
+            components.Add(new SpriteRenderComponent(this, assetNAme));
         }
     }
 }

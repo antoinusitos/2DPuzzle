@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
 
 namespace _2DPuzzle
 {
@@ -44,17 +46,52 @@ namespace _2DPuzzle
         public void InitializeManager()
         {
             _levels = new List<Level>();
+            currentLevel = new Level();
+        }
+
+        public Level[] GetLevelsArray()
+        {
+            return _levels.ToArray();
         }
 
         public void AddLevel(Level inLevel)
         {
             _levels.Add(inLevel);
-            inLevel.InitializeLevel();
 
             if(currentLevel == null)
             {
+                inLevel.InitializeLevel();
                 currentLevel = inLevel;
             }
+        }
+
+        public void LoadLevel(string inLevelName)
+        {
+            Debug.Log("Loading level " + inLevelName);
+
+            if (currentLevel != null)
+            {
+                currentLevel.UninitializeLevel();
+                currentLevel = null;
+            }
+
+            for(int levelIndex = 0; levelIndex < _levels.Count; levelIndex++)
+            {
+                if (_levels[levelIndex].name == inLevelName)
+                {
+                    /*currentLevel = _levels[levelIndex];
+                    currentLevel.InitializeLevel();
+                    currentLevel.Start();
+                    return;*/
+
+                    currentLevel = new Level();
+                    currentLevel.Load(_levels[levelIndex].name);
+                    currentLevel.Start();
+                    return;
+                }
+            }
+
+            Debug.LogError("Cannot find level : " + inLevelName);
         }
 
         public void SaveLevel()

@@ -9,6 +9,12 @@ namespace _2DPuzzle
         public Texture2D whiteRectangle;
         public Color color = Color.White;
 
+        public RectangleRenderComponent() : base()
+        {
+            whiteRectangle = new Texture2D(RenderManager.GetInstance().graphicsDevice, 1, 1);
+            whiteRectangle.SetData(new[] { Color.White });
+        }
+
         public RectangleRenderComponent(Entity inOwner) : base(inOwner)
         {
             whiteRectangle = new Texture2D(RenderManager.GetInstance().graphicsDevice, 1, 1);

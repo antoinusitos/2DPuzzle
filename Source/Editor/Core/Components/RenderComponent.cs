@@ -12,7 +12,13 @@ namespace _2DPuzzle
 
         public bool flipHorizontally = false;
 
-        public SpriteEffects spriteEffects; 
+        public SpriteEffects spriteEffects;
+
+        public RenderComponent()
+        {
+            canRender = true;
+            RenderManager.GetInstance().RegisterRenderer(this);
+        }
 
         public RenderComponent(Entity inOwner) : base(inOwner)
         {

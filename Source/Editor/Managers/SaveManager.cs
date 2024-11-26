@@ -1,96 +1,57 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
 namespace _2DPuzzle
 {
     [Serializable]
-    public class MyJsonDictionary<K, V> : ISerializable
-    {
-        Dictionary<K, V> dict = new Dictionary<K, V>();
-
-        public MyJsonDictionary() { }
-
-        protected MyJsonDictionary(SerializationInfo info, StreamingContext context)
-        {
-            dict = (Dictionary<K,V>)info.GetValue("foo", typeof(Dictionary<K,V>));
-
-            dict.OnDeserialization(null);
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("foo", dict, typeof(Dictionary<K,V>));
-        }
-
-        public void Add(K key, V value)
-        {
-            dict.Add(key, value);
-        }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            foreach (var pair in dict)
-                sb.Append(pair.Key).Append(" : ").Append(pair.Value).AppendLine();
-            return sb.ToString();
-        }
-
-        public V this[K index]
-        {
-            set { dict[index] = value; }
-            get { return dict[index]; }
-        }
-
-        public bool ContainsKey(K inkey)
-        {
-            foreach (K key in dict.Keys)
-            {
-                if(key.Equals(inkey))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-    }
-
-    [Serializable]
     public class SavedData
     {
-        public MyJsonDictionary<string, bool> savedBool = new MyJsonDictionary<string, bool>();
-        public MyJsonDictionary<string, int> savedInt = null;
-        public MyJsonDictionary<string, float> savedFloat = null;
+        public Dictionary<string, bool> savedBool = null;
+        public Dictionary<string, int> savedInt = null;
+        public Dictionary<string, float> savedFloat = null;
+        public Dictionary<string, string> savedString = null;
     }
 
     public class LevelEntitySave
     {
         public string name;
-        public uint ID;
-		public SaveData saveData;
+        public uint entityID;
+        public List<ComponentSave> componentsSaved;
     }
 
+    //Use this to save levels
     public class LevelSave
     {
-		public List<LevelEntitySave> entitiesSaved;
-    } 
+        public string name;
+        public List<LevelEntitySave> entitiesSaved;
+        public List<EntityCleanSave> entitiesCleanSaved;
+    }
 
-	public class ComponentSave
+    //Use this to save components
+    public class ComponentSave
     {
 		public string componentType;
-        public SaveData saveData;
-    } 
+        public SavedData saveData;
+    }
 
+    //Use this to save prefab or level entities that are changed
     public class EntitySave
     {
         public string name;
 		public List<ComponentSave> componentsSaved;
     }
-    
+
+    //Use this to save level entities that are not changed
+    public class EntityCleanSave
+    {
+        public string name;
+        public uint entityID;
+    }
+
     public class SaveManager
     {
         private static SaveManager _instance;
@@ -134,9 +95,9 @@ namespace _2DPuzzle
         {
             savedData = new SavedData()
             {
-                savedBool = new MyJsonDictionary<string, bool>(),
-                savedInt = new MyJsonDictionary<string, int>(),
-                savedFloat = new MyJsonDictionary<string, float>()
+                savedBool = new Dictionary<string, bool>(),
+                savedInt = new Dictionary<string, int>(),
+                savedFloat = new Dictionary<string, float>()
             };
         }
 
@@ -206,18 +167,45 @@ namespace _2DPuzzle
             return -1;
         }
 
-        public void SaveAll()
+        public void SaveEntity(Entity inEntity)
         {
-            var formatter = new BinaryFormatter();
-            using var stream = new FileStream(saveFileName, FileMode.Create, FileAccess.Write, FileShare.None);
-            formatter.Serialize(stream, savedData);
+            EntitySave entitySave = inEntity.GetSaveData();
+
+            string entityToSave = JsonConvert.SerializeObject(entitySave, Formatting.Indented,
+            new JsonSerializerSettings
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+            File.WriteAllText(inEntity.name + ".json", entityToSave);
         }
 
-        public void LoadAll()
+        public Entity LoadEntity(string inEntityName)
         {
-            var formatter = new BinaryFormatter();
-            using var stream = new FileStream(saveFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            savedData = (SavedData)formatter.Deserialize(stream);
+            Entity entity = new Entity();
+            string jsonString = File.ReadAllText(inEntityName + ".json");
+            EntitySave entitySave = JsonConvert.DeserializeObject<EntitySave>(jsonString);
+            entity.name = entitySave.name;
+            for(int componentIndex = 0; componentIndex < entitySave.componentsSaved.Count; componentIndex++)
+            {
+                Type type = Type.GetType(entitySave.componentsSaved[componentIndex].componentType);
+                object o = Activator.CreateInstance(type);
+                EntityComponent entityComponent = (EntityComponent)o;
+                entityComponent.owner = entity;
+                entityComponent.LoadSavedData(entitySave.componentsSaved[componentIndex].saveData);
+                entity.components.Add(entityComponent);
+            }
+            return entity;
+        }
+
+        public void SaveGame()
+        {
+            // Use this to save player stats in player prefs
+        }
+
+        public void LoadGame()
+        {
+            // Use this to load player stats in player prefs
         }
     }
 }

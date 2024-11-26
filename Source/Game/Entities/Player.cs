@@ -4,12 +4,10 @@ namespace _2DPuzzle
 {
     public class Player : Entity
     {
-        public Player()
+        public Player(bool inInitializeNewEntity = false) : base(inInitializeNewEntity)
         {
             name = "Player";
 
-            //components.Add(new SpriteRenderComponent(this, "Idle"));
-            //components.Add(new SpriteAnimatorRenderComponent(this, "Running/Running_", 8, true));
             SetupAnimation();
 
             components.Add(new PlayerMovementComponent(this));

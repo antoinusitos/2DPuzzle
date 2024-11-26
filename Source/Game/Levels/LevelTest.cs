@@ -4,15 +4,20 @@ namespace _2DPuzzle
 {
     public class LevelTest : Level
     {
+        public LevelTest()
+        {
+            name = "LevelTest";
+        }
+
         public override void InitializeLevel()
         {
             base.InitializeLevel();
 
-            name = "LevelTest";
-
             Player player = new Player();
+            player.InitializeNewEntity();
             entities.Add(player);
             player.GetComponent<TransformComponent>().position = new Vector2(100, 100);
+            player.differFromPrefab = true;
 
             ParallaxAsset parallaxAssetFar = new ParallaxAsset("Far");
             parallaxAssetFar.GetComponent<SpriteRenderComponent>().SwitchLayer(-3);
@@ -27,6 +32,7 @@ namespace _2DPuzzle
             entities.Add(parallaxAssetClose);
 
             Floor floor = new Floor();
+            floor.InitializeNewEntity();
             entities.Add(floor);
             floor.GetComponent<TransformComponent>().position = new Vector2(75 , 300);
 

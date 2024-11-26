@@ -1,7 +1,6 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework;
 using MonoGame.ImGuiNet;
-using System;
 
 namespace _2DPuzzle
 {
@@ -54,6 +53,8 @@ namespace _2DPuzzle
 
         private DebugMousePosition debugMousePosition = null;
 
+        private uint currentEntityID = 1;
+
         public void InitializeManager(GameBase inGameBase)
         {
             gameBase = inGameBase;
@@ -63,6 +64,15 @@ namespace _2DPuzzle
 
             debugMousePosition = new DebugMousePosition();
             debugMousePosition.transformComponent.position = new Vector2(0, RenderManager.GetInstance().GetScreenHeight() - 20);
+
+            LevelManager.GetInstance().AddLevel(new LevelTest());
+        }
+
+        public uint GetNewEntityID()
+        {
+            uint toReturn = currentEntityID;
+            currentEntityID++;
+            return toReturn;
         }
 
         public void RenderWindows(GameTime inGameTime)
@@ -129,17 +139,32 @@ namespace _2DPuzzle
             ImGui.SetNextWindowPos(new System.Numerics.Vector2(0, 20));
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(300, RenderManager.GetInstance().GetScreenHeight() - 40));
             ImGui.Begin("Hierarchy", ImGuiWindowFlags.NoMove);
+            ImGui.Separator();
+            if (ImGui.MenuItem("Create Entity", "ctrl+N"))
+            {
+                Entity newEntity = new Entity()
+                {
+                    name = "NewEntity",
+                    isDirty = true,
+                };
+                newEntity.InitializeNewEntity();
+                LevelManager.GetInstance().currentLevel.entities.Add(newEntity);
+                inspectedEntity = newEntity;
+            }
+            ImGui.Separator();
             ImGui.BeginChild("Scrolling", new System.Numerics.Vector2(0), ImGuiChildFlags.None);
             if (LevelManager.GetInstance().currentLevel != null)
             {
                 for (int textIndex = 0; textIndex < LevelManager.GetInstance().currentLevel.entities.Count; textIndex++)
                 {
                     string current = "";
+                    bool selected = false;
                     if(inspectedEntity == LevelManager.GetInstance().currentLevel.entities[textIndex])
                     {
                         current = "         (Inspected)";
+                        selected = true;
                     }
-                    if (ImGui.MenuItem(LevelManager.GetInstance().currentLevel.entities[textIndex].name + current))
+                    if (ImGui.MenuItem(LevelManager.GetInstance().currentLevel.entities[textIndex].name + current, "", selected))
                     {
                         inspectedEntity = LevelManager.GetInstance().currentLevel.entities[textIndex];
                         Debug.Log("Clicked on " + LevelManager.GetInstance().currentLevel.entities[textIndex].name);
@@ -157,12 +182,26 @@ namespace _2DPuzzle
             ImGui.Begin("Inspector", ImGuiWindowFlags.NoMove);
             if(inspectedEntity != null)
             {
-                ImGui.Text(inspectedEntity.name);
-                for(int componentIndex = 0; componentIndex < inspectedEntity.components.Count; componentIndex++)
+                if (inspectedEntity.isDirty && ImGui.MenuItem("Save Entity"))
                 {
+                    SaveManager.GetInstance().SaveEntity(inspectedEntity);
+                }
+                else if(!inspectedEntity.isDirty)
+                {
+                    ImGui.Text("Entity is Saved");
+                }
+                if (ImGui.MenuItem("FORCE Save Entity"))
+                {
+                    SaveManager.GetInstance().SaveEntity(inspectedEntity);
+                }
+                ImGui.Separator();
+                ImGui.InputText("name", ref inspectedEntity.name, 32);
+                ImGui.Text("EntityID:" + inspectedEntity.entityID.ToString());
+                for (int componentIndex = 0; componentIndex < inspectedEntity.components.Count; componentIndex++)
+                {
+                    ImGui.Separator();
                     string componentName = inspectedEntity.components[componentIndex].GetType().ToString();
                     componentName = componentName.Remove(0, 10);
-                    ImGui.Text("");
                     ImGui.BulletText(componentName);
                     ImGui.Text(inspectedEntity.components[componentIndex].ComponentToString());
                 }
@@ -209,7 +248,16 @@ namespace _2DPuzzle
             }
 
             ImGui.Begin("Open Level", ref openLevelActive, ImGuiWindowFlags.None);
-            if (ImGui.MenuItem("Level 1")) { openLevelActive = false; LevelManager.GetInstance().AddLevel(new LevelTest()); }
+            Level[] levels = LevelManager.GetInstance().GetLevelsArray();
+            for (int levelIndex = 0; levelIndex < levels.Length; levelIndex++)
+            {
+                if (ImGui.MenuItem(levels[levelIndex].name)) 
+                {
+                    inspectedEntity = null;
+                    openLevelActive = false; 
+                    LevelManager.GetInstance().LoadLevel(levels[levelIndex].name); 
+                }
+            }
             ImGui.End();
         }
     }

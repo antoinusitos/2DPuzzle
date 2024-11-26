@@ -22,6 +22,8 @@ namespace _2DPuzzle
 
         protected bool _isResizing = false;
 
+        protected bool started = false;
+
         public GameBase()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -68,7 +70,7 @@ namespace _2DPuzzle
 
         protected override void Update(GameTime inGameTime)
         {
-            if(!EditorManager.GetInstance().isPlaying)
+            if (!EditorManager.GetInstance().isPlaying)
             {
                 return;
             }

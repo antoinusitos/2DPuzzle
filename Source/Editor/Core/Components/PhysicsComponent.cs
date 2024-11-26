@@ -23,6 +23,16 @@ namespace _2DPuzzle
 
         public float mass = 1.0f;
 
+        public PhysicsComponent() : base()
+        {
+            CollisionManager.GetInstance().RegisterPhysicsComponent(this);
+            canUpdate = true;
+            RenderManager.GetInstance().RegisterRenderer(this);
+
+            whiteRectangle = new Texture2D(RenderManager.GetInstance().graphicsDevice, 1, 1);
+            whiteRectangle.SetData(new[] { Color.White });
+        }
+
         public PhysicsComponent(Entity inOwner) : base(inOwner)
         {
             CollisionManager.GetInstance().RegisterPhysicsComponent(this);
