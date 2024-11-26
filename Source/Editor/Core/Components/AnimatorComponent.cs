@@ -1,11 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace _2DPuzzle
 {
     public class AnimatorComponent : StateMachineComponent
     {
         private AnimationState currentAnimationState = null;
+
+        //Use this to save only
+        public List<AnimationState> allStates = new List<AnimationState>();
+        public List<StateMachineTransition> allTransitions = new List<StateMachineTransition>();
 
         public AnimatorComponent() : base()
         {
@@ -50,6 +55,35 @@ namespace _2DPuzzle
         public override string ComponentToString()
         {
             return "Current Frame:" + currentAnimationState.spriteAnimatorRender.GetCurrentIndex();
+        }
+
+        public override SavedData GetSavedData()
+        {
+            SavedData toReturn = base.GetSavedData();
+            if(toReturn.savedInt == null)
+            {
+                toReturn.savedInt = new Dictionary<string, int>();
+            }
+            if(toReturn.savedFloat == null)
+            {
+                toReturn.savedFloat = new Dictionary<string, float>();
+            }
+
+            toReturn.savedInt.Add("Editor." + owner.name + ".StatesNumber", allStates.Count);
+            toReturn.savedInt.Add("Editor." + owner.name + ".TransitionsNumber", allTransitions.Count);
+            for (int stateIndex = 0; stateIndex < allStates.Count; stateIndex++)
+            {
+                SavedData tempSavedData = allStates[stateIndex].GetSavedData();
+                if(tempSavedData.savedFloat != null)
+                {
+                    for(KeyValuePair<string, float> singleState : )
+                    for(int floatIndex = 0; floatIndex < tempSavedData.savedFloat.Count; floatIndex++)
+                    {
+                        toReturn.savedFloat.Add(tempSavedData.savedFloat[floatIndex], )
+                    }
+                }
+            }
+            return toReturn;
         }
     }
 }

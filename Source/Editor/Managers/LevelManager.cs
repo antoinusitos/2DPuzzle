@@ -79,10 +79,10 @@ namespace _2DPuzzle
             {
                 if (_levels[levelIndex].name == inLevelName)
                 {
-                    /*currentLevel = _levels[levelIndex];
+                    currentLevel = _levels[levelIndex];
                     currentLevel.InitializeLevel();
                     currentLevel.Start();
-                    return;*/
+                    return;
 
                     currentLevel = new Level();
                     currentLevel.Load(_levels[levelIndex].name);

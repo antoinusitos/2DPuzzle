@@ -34,5 +34,15 @@ namespace _2DPuzzle
         {
 
         }
+
+        public virtual SavedData GetSavedData()
+        {
+            return new SavedData();
+        }
+
+        public virtual void LoadSavedData(SavedData inSavedData)
+        {
+
+        }
     }
 }

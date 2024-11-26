@@ -30,13 +30,18 @@ namespace _2DPuzzle
             AnimationState idleState = new AnimationState
             {
                 spriteAnimatorRender = new SpriteAnimatorRender("Idle", 1, false),
-                parentStateMachine = animatorComponent
+                parentStateMachine = animatorComponent,
+                parentAnimatorComponent = animatorComponent
             };
             AnimationState runningState = new AnimationState
             {
                 spriteAnimatorRender = new SpriteAnimatorRender("Running/Running_", 8, true),
-                parentStateMachine = animatorComponent
+                parentStateMachine = animatorComponent,
+                parentAnimatorComponent = animatorComponent
             };
+
+            animatorComponent.allStates.Add(idleState);
+            animatorComponent.allStates.Add(runningState);
 
             StateMachineTransition idleToRunTransition = new StateMachineTransition
             {
@@ -54,7 +59,8 @@ namespace _2DPuzzle
             runToIdleTransition.transitionCondition += () => { return animatorComponent.GetParameterValue("Running") <= 0; };
             runningState.transitions.Add(runToIdleTransition);
 
-            animatorComponent.SetStartingState(idleState);
+            animatorComponent.allTransitions.Add(idleToRunTransition);
+            animatorComponent.allTransitions.Add(runToIdleTransition);
             animatorComponent.SetStartingState(idleState);
         }
     }
