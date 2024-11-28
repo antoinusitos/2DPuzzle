@@ -32,6 +32,12 @@ namespace _2DPuzzle
             RenderManager.GetInstance().spriteBatch.End();
         }
 
+        public override string ComponentToString()
+        {
+            return  "Rectangle Pos:" + rectangle.Location.ToString() + "\n" +
+                    "Rectangle Size:" + rectangle.Size.ToString();
+        }
+
         public override SavedData GetSavedData()
         {
             SavedData savedData = new SavedData

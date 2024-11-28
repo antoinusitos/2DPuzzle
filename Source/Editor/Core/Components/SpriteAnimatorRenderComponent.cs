@@ -26,8 +26,6 @@ namespace _2DPuzzle
 
             spriteAnimatorRender.UpdateAnimator();
 
-            Debug.Log("Rendering : " + spritePath);
-
             RenderManager.GetInstance().totalBatch++;
             RenderManager.GetInstance().spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderManager.GetInstance().screenScaleMatrix);
             //RenderManager.GetInstance().spriteBatch.Draw(sprites[_currentIndex], _transformComponent.position, null, Color.White, owner.transformComponent.rotation, Vector2.Zero, owner.transformComponent.scale, new SpriteEffects(), 0);

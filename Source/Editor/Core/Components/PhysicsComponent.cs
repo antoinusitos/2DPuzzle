@@ -68,7 +68,9 @@ namespace _2DPuzzle
             return "Unique ID:" + uniqueID + "\n" +
                     "mass:" + mass + "\n" +
                     "velocity:" + velocity + "\n" +
-                    "Use Gravity:" + useGravity;
+                    "Use Gravity:" + useGravity + "\n" +
+                    "Rectangle Pos:" + rectangle.Location.ToString() + "\n" +
+                    "Rectangle Size:" + rectangle.Size.ToString();
         }
 
         public override SavedData GetSavedData()
@@ -86,6 +88,8 @@ namespace _2DPuzzle
                 savedInt = new Dictionary<string, int>
                 {
                     { "Editor." + owner.name + ".CollisionType", (int)collisionType },
+                    { "Editor." + owner.name + ".Rectange.Width", rectangle.Width },
+                    { "Editor." + owner.name + ".Rectange.Height", rectangle.Height },
                 }
             };
             return savedData;
@@ -107,6 +111,18 @@ namespace _2DPuzzle
             {
                 collisionType = (CollisionType)inSavedData.savedInt["Editor." + owner.name + ".CollisionType"];
             }
+
+            int width = 0;
+            if (inSavedData.savedInt.ContainsKey("Editor." + owner.name + ".Rectange.Width"))
+            {
+                width = inSavedData.savedInt["Editor." + owner.name + ".Rectange.Width"];
+            }
+            int height = 0;
+            if (inSavedData.savedInt.ContainsKey("Editor." + owner.name + ".Rectange.Height"))
+            {
+                height = inSavedData.savedInt["Editor." + owner.name + ".Rectange.Height"];
+            }
+            rectangle = new Rectangle(0, 0, width, height);
         }
     }
 }

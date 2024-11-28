@@ -180,7 +180,7 @@ namespace _2DPuzzle
         {
             ImGui.SetNextWindowPos(new System.Numerics.Vector2(RenderManager.GetInstance().GetScreenWidth() - 300, 20));
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(300, RenderManager.GetInstance().GetScreenHeight() - 40));
-            ImGui.Begin("Inspector", ImGuiWindowFlags.NoMove);
+            ImGui.Begin("Inspector", ImGuiWindowFlags.None);
             if(inspectedEntity != null)
             {
                 if (inspectedEntity.isDirty && ImGui.MenuItem("Save Entity"))
