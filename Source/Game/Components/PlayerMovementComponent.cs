@@ -70,7 +70,8 @@ namespace _2DPuzzle
 
         public override string ComponentToString()
         {
-            return "isJumping:" + isJumping + "\n" +
+            return "Unique ID:" + uniqueID + "\n" + 
+                    "isJumping:" + isJumping + "\n" +
                     "speed:" + speed;
         }
 

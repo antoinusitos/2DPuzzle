@@ -37,7 +37,7 @@ namespace _2DPuzzle
 
         public override string ComponentToString()
         {
-            return "spritePath:" + spritePath;
+            return "Unique ID:" + uniqueID + "\n" + "spritePath:" + spritePath + "\n" + "Layer:" + layer;
         }
 
         public override SavedData GetSavedData()
@@ -47,6 +47,10 @@ namespace _2DPuzzle
                 savedString = new Dictionary<string, string>()
                 {
                     { "Editor." + owner.name + ".spritePath", spritePath },
+                },
+                savedInt = new Dictionary<string, int>()
+                {
+                    { "Editor." + owner.name + ".Layer", layer },
                 }
             };
             return savedData;
@@ -58,6 +62,10 @@ namespace _2DPuzzle
             {
                 spritePath = inSavedData.savedString["Editor." + owner.name + ".spritePath"];
                 LoadSprite();
+            }
+            if (inSavedData.savedInt.ContainsKey("Editor." + owner.name + ".Layer"))
+            {
+                SwitchLayer(inSavedData.savedInt["Editor." + owner.name + ".Layer"]);
             }
         }
     }

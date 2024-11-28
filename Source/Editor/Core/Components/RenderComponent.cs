@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
 
 namespace _2DPuzzle
 {
     public class RenderComponent : EntityComponent
     {
-        [JsonIgnore]
         public Texture2D sprite = null;
 
         public int layer = 0;
@@ -20,14 +18,18 @@ namespace _2DPuzzle
             RenderManager.GetInstance().RegisterRenderer(this);
         }
 
-        public RenderComponent(Entity inOwner) : base(inOwner)
+        public RenderComponent(Entity inOwner, bool inMustRegister = true) : base(inOwner)
         {
             canRender = true;
-            RenderManager.GetInstance().RegisterRenderer(this);
+            if(inMustRegister)
+            {
+                RenderManager.GetInstance().RegisterRenderer(this);
+            }
         }
 
         public void SwitchLayer(int inLayer)
         {
+            layer = inLayer;
             RenderManager.GetInstance().SwitchLayer(layer, inLayer, this);
         }
 

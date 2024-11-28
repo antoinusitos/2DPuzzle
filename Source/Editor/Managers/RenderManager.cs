@@ -126,7 +126,7 @@ namespace _2DPuzzle
             LayerToRenderComponents[0].Add(inRenderComponent);
         }
 
-        public void SwitchLayer(int oldLayer, int inLayer, RenderComponent inRenderComponent)
+        public void SwitchLayer(int oldLayer, int inLayer, EntityComponent inRenderComponent)
         {
             LayerToRenderComponents[oldLayer].Remove(inRenderComponent);
             LayerToRenderComponents[inLayer].Add(inRenderComponent);

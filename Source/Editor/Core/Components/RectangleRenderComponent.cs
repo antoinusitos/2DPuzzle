@@ -49,6 +49,7 @@ namespace _2DPuzzle
                     { "Editor." + owner.name + ".Rectangle.Y", rectangle.Y },
                     { "Editor." + owner.name + ".Rectangle.Height", rectangle.Height },
                     { "Editor." + owner.name + ".Rectangle.Width", rectangle.Width },
+                    { "Editor." + owner.name + ".Layer", layer },
                 }
             };
             return savedData;
@@ -101,6 +102,11 @@ namespace _2DPuzzle
             }
 
             rectangle = new Rectangle(x, y, w, h);
+
+            if (inSavedData.savedInt.ContainsKey("Editor." + owner.name + ".Layer"))
+            {
+                SwitchLayer(inSavedData.savedInt["Editor." + owner.name + ".Layer"]);
+            }
         }
     }
 }

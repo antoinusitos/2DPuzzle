@@ -8,10 +8,18 @@ namespace _2DPuzzle
 
         public List<StateMachineTransition> transitions = new List<StateMachineTransition>();
 
+        public uint uniqueID = 0;
+
         public virtual void OnEnter()
         {
 
         }
+
+        public virtual void Start()
+        {
+
+        }
+
         public virtual void OnUpdate()
         {
             for(int conditionIndex = 0; conditionIndex < transitions.Count; conditionIndex++)
@@ -22,7 +30,7 @@ namespace _2DPuzzle
                     continue;
                 }
 
-                if (transitions[conditionIndex].transitionCondition.Invoke())
+                if (transitions[conditionIndex].EvaluateCondition(parentStateMachine))
                 {
                     parentStateMachine.ChangeState(transitions[conditionIndex].toState);
                     return;

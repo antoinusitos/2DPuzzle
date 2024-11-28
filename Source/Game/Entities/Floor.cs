@@ -10,12 +10,14 @@ namespace _2DPuzzle
 
             RectangleRenderComponent rectangleRenderComponent = new RectangleRenderComponent(this)
             {
-                rectangle = new Rectangle(75, 300, 200, 50)
+                rectangle = new Rectangle(75, 300, 200, 50),
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
             };
             components.Add(rectangleRenderComponent);
             PhysicsComponent physicsComponent = new PhysicsComponent(this)
             {
-                rectangle = new Rectangle(75, 300, 200, 50)
+                rectangle = new Rectangle(75, 300, 200, 50),
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
             };
             components.Add(physicsComponent);
         }

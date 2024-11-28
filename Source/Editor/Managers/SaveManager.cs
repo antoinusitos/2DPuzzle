@@ -19,7 +19,7 @@ namespace _2DPuzzle
     public class LevelEntitySave
     {
         public string name;
-        public uint entityID;
+        public uint uniqueID;
         public List<ComponentSave> componentsSaved;
     }
 
@@ -36,6 +36,7 @@ namespace _2DPuzzle
     {
 		public string componentType;
         public SavedData saveData;
+        public string componentUniqueID;
     }
 
     //Use this to save prefab or level entities that are changed
@@ -49,7 +50,7 @@ namespace _2DPuzzle
     public class EntityCleanSave
     {
         public string name;
-        public uint entityID;
+        public uint uniqueID;
     }
 
     public class SaveManager
@@ -180,22 +181,49 @@ namespace _2DPuzzle
             File.WriteAllText("Prefabs/" + inEntity.name + ".json", entityToSave);
         }
 
-        public Entity LoadEntity(string inEntityName)
+        public void LoadEntity(ref Entity inEntity, string inEntityName)
         {
-            Entity entity = new Entity();
             string jsonString = File.ReadAllText("Prefabs/" + inEntityName + ".json");
             EntitySave entitySave = JsonConvert.DeserializeObject<EntitySave>(jsonString);
-            entity.name = entitySave.name;
+            inEntity.name = entitySave.name;
             for(int componentIndex = 0; componentIndex < entitySave.componentsSaved.Count; componentIndex++)
             {
                 Type type = Type.GetType(entitySave.componentsSaved[componentIndex].componentType);
                 object o = Activator.CreateInstance(type);
-                EntityComponent entityComponent = (EntityComponent)o;
-                entityComponent.owner = entity;
-                entityComponent.LoadSavedData(entitySave.componentsSaved[componentIndex].saveData);
-                entity.components.Add(entityComponent);
+                if(type.IsSubclassOf(typeof(EntityComponent)))
+                {
+                    EntityComponent entityComponent = (EntityComponent)o;
+                    entityComponent.uniqueID = uint.Parse(entitySave.componentsSaved[componentIndex].componentUniqueID);
+                    entityComponent.owner = inEntity;
+                    entityComponent.LoadSavedData(entitySave.componentsSaved[componentIndex].saveData);
+                    inEntity.components.Add(entityComponent);
+                }
+                else if (type == typeof(AnimationState))
+                {
+                    AnimationState animationState = (AnimationState)o;
+                    animationState.uniqueID = uint.Parse(entitySave.componentsSaved[componentIndex].componentUniqueID);
+                    AnimatorComponent animatorComponent = inEntity.GetComponent<AnimatorComponent>();
+                    animationState.parentAnimatorComponent = animatorComponent;
+                    animationState.parentStateMachine = animatorComponent;
+                    animationState.LoadSavedData(entitySave.componentsSaved[componentIndex].saveData);
+                    if(animatorComponent.currentState == null)
+                    {
+                        animatorComponent.SetStartingState(animationState);
+                    }
+                    animatorComponent.Start();
+                    animatorComponent.allStates.Add(animationState);
+                }
+                else if (type == typeof(StateMachineTransition))
+                {
+                    StateMachineTransition stateMachineTransition = (StateMachineTransition)o;
+                    stateMachineTransition.uniqueID = uint.Parse(entitySave.componentsSaved[componentIndex].componentUniqueID);
+                    AnimatorComponent animatorComponent = inEntity.GetComponent<AnimatorComponent>();
+                    stateMachineTransition.parentStateMachine = animatorComponent;
+                    stateMachineTransition.LoadSavedData(entitySave.componentsSaved[componentIndex].saveData);
+                    animatorComponent.allTransitions.Add(stateMachineTransition);
+                }
             }
-            return entity;
+            inEntity.transformComponent = inEntity.GetComponent<TransformComponent>();
         }
 
         public void SaveGame()

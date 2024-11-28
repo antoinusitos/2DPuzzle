@@ -60,13 +60,13 @@ namespace _2DPuzzle
                     {
                         name = entitySave.name,
                         componentsSaved = entitySave.componentsSaved,
-                        entityID = entities[entityIndex].entityID
+                        uniqueID = entities[entityIndex].uniqueID
                     };
                     levelSave.entitiesSaved.Add(levelEntitySave);
                 }
                 else
                 {
-                    levelSave.entitiesCleanSaved.Add(new EntityCleanSave() { name = entities[entityIndex].name, entityID = entities[entityIndex].entityID });
+                    levelSave.entitiesCleanSaved.Add(new EntityCleanSave() { name = entities[entityIndex].name, uniqueID = entities[entityIndex].uniqueID });
                 }
             }
             string toSave = JsonConvert.SerializeObject(levelSave, Formatting.Indented);
@@ -80,8 +80,11 @@ namespace _2DPuzzle
             name = levelSave.name;
             for (int entityIndex = 0; entityIndex < levelSave.entitiesCleanSaved.Count; entityIndex++)
             {
-                Entity entity = SaveManager.GetInstance().LoadEntity(levelSave.entitiesCleanSaved[entityIndex].name);
-                entity.entityID = levelSave.entitiesCleanSaved[entityIndex].entityID;
+                Entity entity = new Entity()
+                {
+                    uniqueID = levelSave.entitiesCleanSaved[entityIndex].uniqueID
+                };
+                SaveManager.GetInstance().LoadEntity(ref entity, levelSave.entitiesCleanSaved[entityIndex].name);
                 entities.Add(entity);
             }
         }

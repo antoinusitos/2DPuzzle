@@ -4,18 +4,19 @@ namespace _2DPuzzle
 {
     public class Player : Entity
     {
-        public Player(bool inInitializeNewEntity = false) : base(inInitializeNewEntity)
+        public Player(bool inInitializeNewEntity = true) : base(inInitializeNewEntity)
         {
             name = "Player";
 
             SetupAnimation();
 
-            components.Add(new PlayerMovementComponent(this));
+            components.Add(new PlayerMovementComponent(this) { uniqueID = EditorManager.GetInstance().GetNewUniqueID()});
 
             PhysicsComponent physicsComponent = new PhysicsComponent(this)
             {
                 rectangle = new Rectangle(0, 0, 15, 24),
-                mass = 10
+                mass = 10,
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
             };
             physicsComponent.SetCollisionType(CollisionType.DYNAMIC);
             components.Add(physicsComponent);
@@ -23,22 +24,29 @@ namespace _2DPuzzle
 
         private void SetupAnimation()
         {
-            AnimatorComponent animatorComponent = new AnimatorComponent(this);
+            AnimatorComponent animatorComponent = new AnimatorComponent(this)
+            {
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID(),
+                layer = 1
+            };
             components.Add(animatorComponent);
+            RenderManager.GetInstance().SwitchLayer(0, 1, animatorComponent);
             animatorComponent.parameters.Add("Running", 0);
 
             AnimationState idleState = new AnimationState
             {
-                spriteAnimatorRender = new SpriteAnimatorRender("Idle", 1, false),
                 parentStateMachine = animatorComponent,
-                parentAnimatorComponent = animatorComponent
+                parentAnimatorComponent = animatorComponent,
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
             };
+            idleState.SetAnimation("Idle", 1, false, false);
             AnimationState runningState = new AnimationState
             {
-                spriteAnimatorRender = new SpriteAnimatorRender("Running/Running_", 8, true),
                 parentStateMachine = animatorComponent,
-                parentAnimatorComponent = animatorComponent
+                parentAnimatorComponent = animatorComponent,
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
             };
+            runningState.SetAnimation("Running/Running_", 8, true, false);
 
             animatorComponent.allStates.Add(idleState);
             animatorComponent.allStates.Add(runningState);
@@ -46,17 +54,21 @@ namespace _2DPuzzle
             StateMachineTransition idleToRunTransition = new StateMachineTransition
             {
                 fromState = idleState,
-                toState = runningState
+                toState = runningState,
+                parentStateMachine = animatorComponent,
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
             };
-            idleToRunTransition.transitionCondition += () => { return animatorComponent.GetParameterValue("Running") > 0; };
+            idleToRunTransition.transitionCondition = new TransitionCondition() { parameter = "Running", condition = Condition.SUP, value = 0 };
             idleState.transitions.Add(idleToRunTransition);
 
             StateMachineTransition runToIdleTransition = new StateMachineTransition
             {
                 fromState = runningState,
-                toState = idleState
+                toState = idleState,
+                parentStateMachine = animatorComponent,
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
             };
-            runToIdleTransition.transitionCondition += () => { return animatorComponent.GetParameterValue("Running") <= 0; };
+            runToIdleTransition.transitionCondition = new TransitionCondition() { parameter = "Running", condition = Condition.INFEQUAL, value = 0 };
             runningState.transitions.Add(runToIdleTransition);
 
             animatorComponent.allTransitions.Add(idleToRunTransition);

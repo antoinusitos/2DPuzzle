@@ -8,7 +8,7 @@
         {
             name = "Parallax-" + inAssetNAme;
             assetNAme = inAssetNAme;
-            components.Add(new SpriteRenderComponent(this, assetNAme));
+            components.Add(new SpriteRenderComponent(this, assetNAme) { uniqueID = EditorManager.GetInstance().GetNewUniqueID() });
         }
     }
 }

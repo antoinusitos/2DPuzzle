@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
 using System;
 
 namespace _2DPuzzle
@@ -9,17 +8,19 @@ namespace _2DPuzzle
         public bool canUpdate = false;
         public bool canRender = false;
 
-        [JsonIgnore]
         public Entity owner = null;
 
         public bool enabled = true;
 
-        [JsonIgnore]
         protected TransformComponent _transformComponent = null;
 
         public Type type;
 
         public bool isDirty = false;
+
+        public uint uniqueID = 0;
+
+        public bool started = false;
 
         public EntityComponent()
         {
@@ -49,6 +50,7 @@ namespace _2DPuzzle
         public virtual void Start()
         {
             _transformComponent = owner.GetComponent<TransformComponent>();
+            started = true;
         }
 
         public void SetCanUpdate(bool inCanUpdate)
@@ -77,6 +79,11 @@ namespace _2DPuzzle
         public virtual void LoadSavedData(SavedData inSavedData)
         {
 
+        }
+
+        public virtual ComponentSave[] GetMoreComponentsToSave()
+        {
+            return null;
         }
     }
 }

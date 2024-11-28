@@ -53,7 +53,7 @@ namespace _2DPuzzle
 
         private DebugMousePosition debugMousePosition = null;
 
-        private uint currentEntityID = 1;
+        private uint currentUniqueID = 1;
 
         public void InitializeManager(GameBase inGameBase)
         {
@@ -68,10 +68,10 @@ namespace _2DPuzzle
             LevelManager.GetInstance().AddLevel(new LevelTest());
         }
 
-        public uint GetNewEntityID()
+        public uint GetNewUniqueID()
         {
-            uint toReturn = currentEntityID;
-            currentEntityID++;
+            uint toReturn = currentUniqueID;
+            currentUniqueID++;
             return toReturn;
         }
 
@@ -147,6 +147,7 @@ namespace _2DPuzzle
                     name = "NewEntity",
                     isDirty = true,
                 };
+                newEntity.uniqueID = EditorManager.GetInstance().GetNewUniqueID();
                 newEntity.InitializeNewEntity();
                 LevelManager.GetInstance().currentLevel.entities.Add(newEntity);
                 inspectedEntity = newEntity;
@@ -196,7 +197,7 @@ namespace _2DPuzzle
                 }
                 ImGui.Separator();
                 ImGui.InputText("name", ref inspectedEntity.name, 32);
-                ImGui.Text("EntityID:" + inspectedEntity.entityID.ToString());
+                ImGui.Text("uniqueID:" + inspectedEntity.uniqueID.ToString());
                 for (int componentIndex = 0; componentIndex < inspectedEntity.components.Count; componentIndex++)
                 {
                     ImGui.Separator();

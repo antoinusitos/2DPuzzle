@@ -12,7 +12,7 @@ namespace _2DPuzzle
         private int frameNumber = 0;
         private string spritePath = "";
 
-        public SpriteAnimatorRenderComponent(Entity inOwner, string inSpritePath, int inFrameNumber, bool inLoop) : base(inOwner)
+        public SpriteAnimatorRenderComponent(Entity inOwner, string inSpritePath, int inFrameNumber, bool inLoop, bool inMustRegister = true) : base(inOwner, inMustRegister)
         {
             loop = inLoop;
             frameNumber = inFrameNumber;
@@ -25,6 +25,8 @@ namespace _2DPuzzle
             base.Render(inGameTime);
 
             spriteAnimatorRender.UpdateAnimator();
+
+            Debug.Log("Rendering : " + spritePath);
 
             RenderManager.GetInstance().totalBatch++;
             RenderManager.GetInstance().spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderManager.GetInstance().screenScaleMatrix);
@@ -40,7 +42,7 @@ namespace _2DPuzzle
 
         public override string ComponentToString()
         {
-            return "Current Frame:" + spriteAnimatorRender.GetCurrentIndex();
+            return "Unique ID:" + uniqueID + "\n" + "Current Frame:" + spriteAnimatorRender.GetCurrentIndex() + "\n" + "Layer:" + layer;
         }
 
         public override SavedData GetSavedData()
@@ -58,6 +60,7 @@ namespace _2DPuzzle
                 savedInt = new Dictionary<string, int>
                 {
                     { "Editor." + owner.name + ".FrameNumber", frameNumber },
+                    { "Editor." + owner.name + ".Layer", layer },
                 }
             };
             return savedData;
@@ -78,6 +81,10 @@ namespace _2DPuzzle
             if (inSavedData.savedInt.ContainsKey("Editor." + owner.name + ".FrameNumber"))
             {
                 frameNumber = inSavedData.savedInt["Editor." + owner.name + ".FrameNumber"];
+            }
+            if (inSavedData.savedInt.ContainsKey("Editor." + owner.name + ".Layer"))
+            {
+                SwitchLayer(inSavedData.savedInt["Editor." + owner.name + ".Layer"]);
             }
 
             LoadSpriteAnimatorRender();

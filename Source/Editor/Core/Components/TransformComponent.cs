@@ -30,7 +30,8 @@ namespace _2DPuzzle
 
         public override string ComponentToString()
         {
-            return "Position:" + position + "\n" + 
+            return "Unique ID:" + uniqueID + "\n" + 
+                    "Position:" + position + "\n" + 
                     "Rotation:" + rotation + "\n" + 
                     "Scale:" + scale;
         }
@@ -41,11 +42,15 @@ namespace _2DPuzzle
             {
                 savedFloat = new Dictionary<string, float>
                 {
-                    { "Editor." + owner.name + ".Position.X", position.X },
-                    { "Editor." + owner.name + ".Position.Y", position.Y },
-                    { "Editor." + owner.name + ".Rotation", rotation },
-                    { "Editor." + owner.name + ".Scale.X", scale.X },
-                    { "Editor." + owner.name + ".Scale.Y", scale.Y }
+                    { "Editor." + owner.name + ".Position.X." + uniqueID, position.X },
+                    { "Editor." + owner.name + ".Position.Y." + uniqueID, position.Y },
+                    { "Editor." + owner.name + ".Rotation." + uniqueID, rotation },
+                    { "Editor." + owner.name + ".Scale.X." + uniqueID, scale.X },
+                    { "Editor." + owner.name + ".Scale.Y." + uniqueID, scale.Y }
+                },
+                savedString = new Dictionary<string, string>
+                {
+                    { "Editor." + owner.name + ".UniqueID", uniqueID.ToString() },
                 }
             };
             return savedData;
@@ -53,32 +58,37 @@ namespace _2DPuzzle
 
         public override void LoadSavedData(SavedData inSavedData)
         {
+            if (inSavedData.savedString.ContainsKey("Editor." + owner.name + ".UniqueID"))
+            {
+                uniqueID = uint.Parse(inSavedData.savedString["Editor." + owner.name + ".UniqueID"]);
+            }
+
             float x = 0;
             float y = 0;
-            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Position.X"))
+            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Position.X." + uniqueID))
             {
-                x = inSavedData.savedFloat["Editor." + owner.name + ".Position.X"];
+                x = inSavedData.savedFloat["Editor." + owner.name + ".Position.X." + uniqueID];
             }
-            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Position.Y"))
+            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Position.Y." + uniqueID))
             {
-                y = inSavedData.savedFloat["Editor." + owner.name + ".Position.Y"];
+                y = inSavedData.savedFloat["Editor." + owner.name + ".Position.Y." + uniqueID];
             }
             position = new Vector2(x, y);
 
-            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Rotation"))
+            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Rotation." + uniqueID))
             {
-                rotation = inSavedData.savedFloat["Editor." + owner.name + ".Rotation"];
+                rotation = inSavedData.savedFloat["Editor." + owner.name + ".Rotation." + uniqueID];
             }
 
             x = 0;
             y = 0;
-            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Scale.X"))
+            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Scale.X." + uniqueID))
             {
-                x = inSavedData.savedFloat["Editor." + owner.name + ".Scale.X"];
+                x = inSavedData.savedFloat["Editor." + owner.name + ".Scale.X." + uniqueID];
             }
-            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Scale.Y"))
+            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Scale.Y." + uniqueID))
             {
-                y = inSavedData.savedFloat["Editor." + owner.name + ".Scale.Y"];
+                y = inSavedData.savedFloat["Editor." + owner.name + ".Scale.Y." + uniqueID];
             }
             scale = new Vector2(x, y);
         }

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Security.Principal;
 
 namespace _2DPuzzle
 {
@@ -18,7 +17,7 @@ namespace _2DPuzzle
         [JsonIgnore]
         public TransformComponent transformComponent = null;
 
-        public uint entityID = 0;
+        public uint uniqueID = 0;
         [JsonIgnore]
         public bool isDirty = false;
 
@@ -37,10 +36,11 @@ namespace _2DPuzzle
 
         public void InitializeNewEntity()
         {
-            transformComponent = new TransformComponent(this);
+            transformComponent = new TransformComponent(this)
+            {
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
+            };
             components.Add(transformComponent);
-
-            entityID = EditorManager.GetInstance().GetNewEntityID();
         }
 
         public virtual void Start()
@@ -81,7 +81,16 @@ namespace _2DPuzzle
                 ComponentSave componentSave = new ComponentSave();
                 componentSave.componentType = components[componentIndex].GetType().ToString();
                 componentSave.saveData = components[componentIndex].GetSavedData();
+                componentSave.componentUniqueID = components[componentIndex].uniqueID.ToString();
                 entitySave.componentsSaved.Add(componentSave);
+                ComponentSave[] componentSaves = components[componentIndex].GetMoreComponentsToSave();
+                if(componentSaves != null)
+                {
+                    for (int moreComponentIndex = 0; moreComponentIndex < componentSaves.Length; moreComponentIndex++)
+                    {
+                        entitySave.componentsSaved.Add(componentSaves[moreComponentIndex]);
+                    }
+                }
             }
 
             return entitySave;

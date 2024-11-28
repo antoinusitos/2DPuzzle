@@ -65,7 +65,8 @@ namespace _2DPuzzle
 
         public override string ComponentToString()
         {
-            return "mass:" + mass + "\n" +
+            return "Unique ID:" + uniqueID + "\n" +
+                    "mass:" + mass + "\n" +
                     "velocity:" + velocity + "\n" +
                     "Use Gravity:" + useGravity;
         }

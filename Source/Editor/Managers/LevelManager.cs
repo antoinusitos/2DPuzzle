@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 
 namespace _2DPuzzle
 {
@@ -79,10 +77,10 @@ namespace _2DPuzzle
             {
                 if (_levels[levelIndex].name == inLevelName)
                 {
-                    currentLevel = _levels[levelIndex];
+                    /*currentLevel = _levels[levelIndex];
                     currentLevel.InitializeLevel();
                     currentLevel.Start();
-                    return;
+                    return;*/
 
                     currentLevel = new Level();
                     currentLevel.Load(_levels[levelIndex].name);
