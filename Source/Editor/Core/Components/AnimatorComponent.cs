@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ImGuiNET;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace _2DPuzzle
@@ -63,7 +64,15 @@ namespace _2DPuzzle
         public override string ComponentToString()
         {
             return "Unique ID:" + uniqueID + "\n" +
-                    "Current Frame:" + (currentAnimationState != null ? currentAnimationState.spriteAnimatorRenderComponent.spriteAnimatorRender.GetCurrentIndex() : "-1");
+                    "Current Frame:" + (currentAnimationState != null ? currentAnimationState.spriteAnimatorRenderComponent.spriteAnimatorRender.GetCurrentIndex() : "-1") + "\n" +
+                    "Layer:" + layer;
+        }
+
+        public override void EditorGUI()
+        {
+            ImGui.Text("Unique ID:" + uniqueID);
+            ImGui.Text("Current Frame:" + (currentAnimationState != null ? currentAnimationState.spriteAnimatorRenderComponent.spriteAnimatorRender.GetCurrentIndex() : "-1"));
+            ImGui.Text("Layer:" + layer);
         }
 
         public override SavedData GetSavedData()
@@ -103,7 +112,8 @@ namespace _2DPuzzle
             }
             if (inSavedData.savedInt.ContainsKey("Editor." + owner.name + ".layer"))
             {
-                RenderManager.GetInstance().SwitchLayer(0, inSavedData.savedInt["Editor." + owner.name + ".layer"], this);
+                layer = inSavedData.savedInt["Editor." + owner.name + ".layer"];
+                RenderManager.GetInstance().SwitchLayer(0, layer, this);
             }
         }
 

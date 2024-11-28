@@ -1,6 +1,8 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework;
 using MonoGame.ImGuiNet;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace _2DPuzzle
 {
@@ -58,6 +60,12 @@ namespace _2DPuzzle
         private AnimatorComponent inspectedAnimatorComponent = null;
         private bool animatorToolActive = false;
 
+        private bool saveLevelActive = false;
+
+        private bool addComponentActive = false;
+
+        private bool spawnPrefabActive = false;
+
         public void InitializeManager(GameBase inGameBase)
         {
             gameBase = inGameBase;
@@ -92,7 +100,13 @@ namespace _2DPuzzle
 
             RenderOpenMenu();
 
+            RenderSaveMenu();
+
             RenderAnimatorTool();
+
+            RenderAddComponent();
+
+            RenderSpawnPrefab();
 
             guiRenderer.EndLayout();
 
@@ -109,7 +123,7 @@ namespace _2DPuzzle
                 if (ImGui.BeginMenu("File"))
                 {
                     if (ImGui.MenuItem("Open", "Ctrl+O")) { openLevelActive = true; }
-                    if (ImGui.MenuItem("Save", "Ctrl+S")) { LevelManager.GetInstance().SaveLevel(); }
+                    if (ImGui.MenuItem("Save", "Ctrl+S")) { if (LevelManager.GetInstance().currentLevel.name == string.Empty) { saveLevelActive = true; } else { LevelManager.GetInstance().SaveLevel(); } }
                     if (ImGui.MenuItem("Close", "Ctrl+W")) { gameBase.Exit(); }
                     ImGui.EndMenu();
                 }
@@ -145,6 +159,10 @@ namespace _2DPuzzle
             ImGui.SetNextWindowSize(new System.Numerics.Vector2(300, RenderManager.GetInstance().GetScreenHeight() - 40));
             ImGui.Begin("Hierarchy", ImGuiWindowFlags.NoMove);
             ImGui.Separator();
+            if (ImGui.MenuItem("Spawn Prefab", "ctrl+P"))
+            {
+                spawnPrefabActive = true;
+            }
             if (ImGui.MenuItem("Create Entity", "ctrl+N"))
             {
                 Entity newEntity = new Entity()
@@ -152,7 +170,7 @@ namespace _2DPuzzle
                     name = "NewEntity",
                     isDirty = true,
                 };
-                newEntity.uniqueID = EditorManager.GetInstance().GetNewUniqueID();
+                newEntity.uniqueID = GetNewUniqueID();
                 newEntity.InitializeNewEntity();
                 LevelManager.GetInstance().currentLevel.entities.Add(newEntity);
                 inspectedEntity = newEntity;
@@ -209,7 +227,7 @@ namespace _2DPuzzle
                     string componentName = inspectedEntity.components[componentIndex].GetType().ToString();
                     componentName = componentName.Remove(0, 10);
                     ImGui.BulletText(componentName);
-                    ImGui.Text(inspectedEntity.components[componentIndex].ComponentToString());
+                    inspectedEntity.components[componentIndex].EditorGUI();
                     if (inspectedEntity.components[componentIndex].GetType() == typeof(AnimatorComponent))
                     {
                         if (ImGui.MenuItem("Animator Tool", "ctrl+A"))
@@ -218,6 +236,11 @@ namespace _2DPuzzle
                             animatorToolActive = true;
                         }
                     }
+                }
+                ImGui.Separator();
+                if (ImGui.MenuItem("Add Component", ""))
+                {
+                    addComponentActive = true;
                 }
             }
             ImGui.End();
@@ -254,6 +277,23 @@ namespace _2DPuzzle
             ImGui.End();
         }
 
+        private void RenderSaveMenu()
+        {
+            if (!saveLevelActive)
+            {
+                return;
+            }
+
+            ImGui.Begin("Save Level", ref saveLevelActive, ImGuiWindowFlags.None);
+            ImGui.InputText("Level Name", ref LevelManager.GetInstance().currentLevel.name, 32);
+            if(ImGui.Button("Save"))
+            {
+                LevelManager.GetInstance().SaveLevel();
+                saveLevelActive = false;
+            }
+            ImGui.End();
+        }
+
         private void RenderOpenMenu()
         {
             if (!openLevelActive)
@@ -262,14 +302,15 @@ namespace _2DPuzzle
             }
 
             ImGui.Begin("Open Level", ref openLevelActive, ImGuiWindowFlags.None);
-            Level[] levels = LevelManager.GetInstance().GetLevelsArray();
-            for (int levelIndex = 0; levelIndex < levels.Length; levelIndex++)
+            string[] availableLevels = Directory.GetFiles("Levels/");
+            for (int levelIndex = 0; levelIndex < availableLevels.Length; levelIndex++)
             {
-                if (ImGui.MenuItem(levels[levelIndex].name)) 
+                string level = availableLevels[levelIndex].Replace("Levels/", "").Replace(".json", "");
+                if (ImGui.MenuItem(level))
                 {
                     inspectedEntity = null;
-                    openLevelActive = false; 
-                    LevelManager.GetInstance().LoadLevel(levels[levelIndex].name); 
+                    openLevelActive = false;
+                    LevelManager.GetInstance().LoadLevel(level);
                 }
             }
             ImGui.End();
@@ -306,6 +347,64 @@ namespace _2DPuzzle
                 ImGui.Separator();
             }
             ImGui.EndChild();
+            ImGui.End();
+        }
+
+        private void RenderAddComponent()
+        {
+            if (!addComponentActive)
+            {
+                return;
+            }
+
+            ImGui.Begin("Add Component", ref addComponentActive, ImGuiWindowFlags.None);
+            if (ImGui.MenuItem("Sprite Render Component", ""))
+            {
+                addComponentActive = false;
+            }
+            if (ImGui.MenuItem("Physics Component", ""))
+            {
+                addComponentActive = false;
+                PhysicsComponent physicsComponent = new PhysicsComponent()
+                {
+                    uniqueID = GetNewUniqueID()
+                };
+                inspectedEntity.components.Add(physicsComponent);
+            }
+            if (ImGui.MenuItem("Animator Component", ""))
+            {
+                addComponentActive = false;
+            }
+            ImGui.End();
+        }
+
+        private void RenderSpawnPrefab()
+        {
+            if (!spawnPrefabActive)
+            {
+                return;
+            }
+
+            ImGui.Begin("Spawn Prefab", ref spawnPrefabActive, ImGuiWindowFlags.None);
+            string [] prefabs = Directory.GetFiles("Prefabs/");
+            for(int prefabIndex = 0;  prefabIndex < prefabs.Length; prefabIndex++)
+            {
+                string prefab = prefabs[prefabIndex].Replace("Prefabs/", "").Replace(".json", "");
+                if (ImGui.MenuItem(prefab, ""))
+                {
+                    spawnPrefabActive = false;
+                    uint newID = GetNewUniqueID();
+                    Entity newEntity = new Entity()
+                    {
+                        name = prefab + newID,
+                        differFromPrefab = true,
+                    };
+                    SaveManager.GetInstance().LoadEntity(ref newEntity, prefab);
+                    newEntity.uniqueID = newID;
+                    LevelManager.GetInstance().currentLevel.entities.Add(newEntity);
+                    inspectedEntity = newEntity;
+                }
+            }
             ImGui.End();
         }
     }

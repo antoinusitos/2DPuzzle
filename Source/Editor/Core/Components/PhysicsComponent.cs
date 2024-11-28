@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using static System.Formats.Asn1.AsnWriter;
 using System.Collections.Generic;
+using ImGuiNET;
+using System.Runtime.Intrinsics.X86;
 
 namespace _2DPuzzle
 {
@@ -71,6 +73,16 @@ namespace _2DPuzzle
                     "Use Gravity:" + useGravity + "\n" +
                     "Rectangle Pos:" + rectangle.Location.ToString() + "\n" +
                     "Rectangle Size:" + rectangle.Size.ToString();
+        }
+
+        public override void EditorGUI()
+        {
+            ImGui.Text("Unique ID:" + uniqueID);
+            ImGui.Text("mass:" + mass);
+            ImGui.Text("velocity:" + velocity);
+            ImGui.Text("Use Gravity:" + useGravity);
+            ImGui.Text("Rectangle Pos:" + rectangle.Location.ToString());
+            ImGui.Text("Rectangle Size:" + rectangle.Size.ToString());
         }
 
         public override SavedData GetSavedData()

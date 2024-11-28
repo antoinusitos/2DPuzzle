@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ImGuiNET;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
@@ -36,6 +37,12 @@ namespace _2DPuzzle
         {
             return  "Rectangle Pos:" + rectangle.Location.ToString() + "\n" +
                     "Rectangle Size:" + rectangle.Size.ToString();
+        }
+
+        public override void EditorGUI()
+        {
+            ImGui.Text("Rectangle Pos:" + rectangle.Location.ToString());
+            ImGui.Text("Rectangle Size:" + rectangle.Size.ToString());
         }
 
         public override SavedData GetSavedData()

@@ -72,24 +72,15 @@ namespace _2DPuzzle
                 currentLevel.UninitializeLevel();
                 currentLevel = null;
             }
+            
+            /*currentLevel = _levels[levelIndex];
+            currentLevel.InitializeLevel();
+            currentLevel.Start();
+            return;*/
 
-            for(int levelIndex = 0; levelIndex < _levels.Count; levelIndex++)
-            {
-                if (_levels[levelIndex].name == inLevelName)
-                {
-                    /*currentLevel = _levels[levelIndex];
-                    currentLevel.InitializeLevel();
-                    currentLevel.Start();
-                    return;*/
-
-                    currentLevel = new Level();
-                    currentLevel.Load(_levels[levelIndex].name);
-                    currentLevel.Start();
-                    return;
-                }
-            }
-
-            Debug.LogError("Cannot find level : " + inLevelName);
+            currentLevel = new Level();
+            currentLevel.Load(inLevelName);
+            currentLevel.Start();
         }
 
         public void SaveLevel()

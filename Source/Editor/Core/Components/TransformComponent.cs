@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ImGuiNET;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace _2DPuzzle
@@ -34,6 +35,16 @@ namespace _2DPuzzle
                     "Position:" + position + "\n" + 
                     "Rotation:" + rotation + "\n" + 
                     "Scale:" + scale;
+        }
+
+        public override void EditorGUI()
+        {
+            ImGui.Text("Unique ID:" + uniqueID);
+            ImGui.InputFloat("Position_X", ref _position.X);
+            ImGui.InputFloat("Position_Y", ref _position.Y);
+            ImGui.InputFloat("Rotation", ref _rotation);
+            ImGui.InputFloat("Scale_X", ref _scale.X);
+            ImGui.InputFloat("Scale_Y", ref _scale.Y);
         }
 
         public override SavedData GetSavedData()

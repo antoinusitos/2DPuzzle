@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ImGuiNET;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace _2DPuzzle
 {
@@ -73,6 +75,13 @@ namespace _2DPuzzle
             return "Unique ID:" + uniqueID + "\n" + 
                     "isJumping:" + isJumping + "\n" +
                     "speed:" + speed;
+        }
+
+        public override void EditorGUI()
+        {
+            ImGui.Text("Unique ID:" + uniqueID);
+            ImGui.Text("isJumping:" + isJumping);
+            ImGui.Text("speed:" + speed);
         }
 
         public override SavedData GetSavedData()

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ImGuiNET;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
@@ -41,6 +42,13 @@ namespace _2DPuzzle
         public override string ComponentToString()
         {
             return "Unique ID:" + uniqueID + "\n" + "Current Frame:" + spriteAnimatorRender.GetCurrentIndex() + "\n" + "Layer:" + layer;
+        }
+
+        public override void EditorGUI()
+        {
+            ImGui.Text("Unique ID:" + uniqueID);
+            ImGui.Text("Current Frame:" + spriteAnimatorRender.GetCurrentIndex());
+            ImGui.Text("Layer:" + layer);
         }
 
         public override SavedData GetSavedData()

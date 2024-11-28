@@ -71,6 +71,11 @@ namespace _2DPuzzle
             return "";
         }
 
+        public virtual void EditorGUI()
+        {
+
+        }
+
         public virtual SavedData GetSavedData()
         {
             return new SavedData();
