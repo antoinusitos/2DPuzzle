@@ -221,6 +221,13 @@ namespace _2DPuzzle
                     stateMachineTransition.parentStateMachine = animatorComponent;
                     stateMachineTransition.LoadSavedData(entitySave.componentsSaved[componentIndex].saveData);
                     animatorComponent.allTransitions.Add(stateMachineTransition);
+                    for(int animationStateIndex = 0; animationStateIndex < animatorComponent.allStates.Count; animationStateIndex++)
+                    {
+                        if (animatorComponent.allStates[animationStateIndex] == stateMachineTransition.fromState)
+                        {
+                            animatorComponent.allStates[animationStateIndex].transitions.Add(stateMachineTransition);
+                        }
+                    }
                 }
             }
             inEntity.transformComponent = inEntity.GetComponent<TransformComponent>();
