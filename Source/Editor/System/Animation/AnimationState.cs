@@ -28,7 +28,6 @@ namespace _2DPuzzle
         private void LoadSpriteAnimatorRender(bool inMustRegister)
         {
             spriteAnimatorRenderComponent = new SpriteAnimatorRenderComponent(parentAnimatorComponent.owner, spritePath, frameNumber, loop, inMustRegister);
-            //spriteAnimatorRenderComponent.SwitchLayer(inLayer);
         }
 
         public override SavedData GetSavedData()
@@ -38,6 +37,7 @@ namespace _2DPuzzle
                 savedString = new Dictionary<string, string>
                 {
                     { "Editor." + parentAnimatorComponent.owner.name + "." + uniqueID + ".SpritePath", spritePath },
+                    { "Editor." + parentAnimatorComponent.owner.name + "." + uniqueID + ".AnimationStateName", animationStateName },
                 },
                 savedBool = new Dictionary<string, bool>
                 {
@@ -56,6 +56,10 @@ namespace _2DPuzzle
             if (inSavedData.savedString.ContainsKey("Editor." + parentAnimatorComponent.owner.name + "." + uniqueID + ".SpritePath"))
             {
                 spritePath = inSavedData.savedString["Editor." + parentAnimatorComponent.owner.name + "." + uniqueID + ".SpritePath"];
+            }
+            if (inSavedData.savedString.ContainsKey("Editor." + parentAnimatorComponent.owner.name + "." + uniqueID + ".AnimationStateName"))
+            {
+                animationStateName = inSavedData.savedString["Editor." + parentAnimatorComponent.owner.name + "." + uniqueID + ".AnimationStateName"];
             }
 
             if (inSavedData.savedBool.ContainsKey("Editor." + parentAnimatorComponent.owner.name + "." + uniqueID + ".Loop"))

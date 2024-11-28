@@ -37,14 +37,16 @@ namespace _2DPuzzle
             {
                 parentStateMachine = animatorComponent,
                 parentAnimatorComponent = animatorComponent,
-                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID(),
+                animationStateName = "Idle"
             };
             idleState.SetAnimation("Idle", 1, false, false);
             AnimationState runningState = new AnimationState
             {
                 parentStateMachine = animatorComponent,
                 parentAnimatorComponent = animatorComponent,
-                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID(),
+                animationStateName = "Running"
             };
             runningState.SetAnimation("Running/Running_", 8, true, false);
 

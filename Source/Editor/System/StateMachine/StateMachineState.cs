@@ -9,6 +9,7 @@ namespace _2DPuzzle
         public List<StateMachineTransition> transitions = new List<StateMachineTransition>();
 
         public uint uniqueID = 0;
+        public string animationStateName = "";
 
         public virtual void OnEnter()
         {

@@ -55,6 +55,9 @@ namespace _2DPuzzle
 
         private uint currentUniqueID = 1;
 
+        private AnimatorComponent inspectedAnimatorComponent = null;
+        private bool animatorToolActive = false;
+
         public void InitializeManager(GameBase inGameBase)
         {
             gameBase = inGameBase;
@@ -88,6 +91,8 @@ namespace _2DPuzzle
             RenderConsole();
 
             RenderOpenMenu();
+
+            RenderAnimatorTool();
 
             guiRenderer.EndLayout();
 
@@ -205,6 +210,14 @@ namespace _2DPuzzle
                     componentName = componentName.Remove(0, 10);
                     ImGui.BulletText(componentName);
                     ImGui.Text(inspectedEntity.components[componentIndex].ComponentToString());
+                    if (inspectedEntity.components[componentIndex].GetType() == typeof(AnimatorComponent))
+                    {
+                        if (ImGui.MenuItem("Animator Tool", "ctrl+A"))
+                        {
+                            inspectedAnimatorComponent = (AnimatorComponent)inspectedEntity.components[componentIndex];
+                            animatorToolActive = true;
+                        }
+                    }
                 }
             }
             ImGui.End();
@@ -259,6 +272,40 @@ namespace _2DPuzzle
                     LevelManager.GetInstance().LoadLevel(levels[levelIndex].name); 
                 }
             }
+            ImGui.End();
+        }
+
+        private void RenderAnimatorTool()
+        {
+            if (!animatorToolActive)
+            {
+                return;
+            }
+
+            ImGui.Begin("Animator Tool", ref animatorToolActive, ImGuiWindowFlags.None);
+            ImGui.BeginChild("Scrolling", new System.Numerics.Vector2(0), ImGuiChildFlags.None);
+            AnimationState[] animationStates = inspectedAnimatorComponent.allStates.ToArray();
+            for (int stateIndex = 0; stateIndex < animationStates.Length; stateIndex++)
+            {
+                ImGui.TextColored(new System.Numerics.Vector4(1, 0, 0, 1), "Name:" + animationStates[stateIndex].animationStateName);
+                ImGui.Text("Sprite Path:" + animationStates[stateIndex].spritePath);
+                ImGui.Separator();
+                if (ImGui.CollapsingHeader("Transitions" + stateIndex))
+                {
+                    for (int transitionIndex = 0; transitionIndex < animationStates[stateIndex].transitions.Count; transitionIndex++)
+                    {
+                        ImGui.Text("From:" + animationStates[stateIndex].transitions[transitionIndex].fromState.animationStateName);
+                        ImGui.Text("To:" + animationStates[stateIndex].transitions[transitionIndex].toState.animationStateName);
+                        ImGui.Text("Condition Data");
+                        ImGui.Text("Parameter:" + animationStates[stateIndex].transitions[transitionIndex].transitionCondition.parameter);
+                        ImGui.Text("Condition:" + animationStates[stateIndex].transitions[transitionIndex].transitionCondition.condition);
+                        ImGui.Text("Value:" + animationStates[stateIndex].transitions[transitionIndex].transitionCondition.value);
+                    }
+                }
+                ImGui.Separator();
+                ImGui.Separator();
+            }
+            ImGui.EndChild();
             ImGui.End();
         }
     }
