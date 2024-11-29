@@ -48,6 +48,11 @@ namespace _2DPuzzle
             entityComponents = new List<EntityComponent>();
         }
 
+        public void Clear()
+        {
+            entityComponents.Clear();
+        }
+
         public void RegisterComponent(EntityComponent inComponent)
         {
             entityComponents.Add(inComponent);

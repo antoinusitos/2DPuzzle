@@ -8,7 +8,6 @@ namespace _2DPuzzle
     public class SpriteRenderComponent : RenderComponent
     {
         public string spritePath = "";
-
         public SpriteRenderComponent() : base()
         {
 
@@ -29,6 +28,11 @@ namespace _2DPuzzle
         {
             base.Render(inGameTime);
 
+            if(sprite == null)
+            {
+                return;
+            }
+
             RenderManager.GetInstance().totalBatch++;
             RenderManager.GetInstance().spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderManager.GetInstance().screenScaleMatrix);
             //RenderManager.GetInstance().spriteBatch.Draw(sprite,  _transformComponent.position, Color.White, _transformComponent.rotation,, spriteEffects);
@@ -44,7 +48,11 @@ namespace _2DPuzzle
         public override void EditorGUI()
         {
             ImGui.Text("Unique ID:" + uniqueID);
-            ImGui.Text("spritePath:" + spritePath);
+            ImGui.InputText("spritePath", ref spritePath, 32);
+            if(ImGui.MenuItem("Load Sprite"))
+            {
+                LoadSprite();
+            }
             ImGui.Text("Layer:" + layer);
         }
 

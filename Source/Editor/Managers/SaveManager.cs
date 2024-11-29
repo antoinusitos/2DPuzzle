@@ -2,12 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace _2DPuzzle
 {
-    [Serializable]
     public class SavedData
     {
         public Dictionary<string, bool> savedBool = null;
@@ -21,6 +18,11 @@ namespace _2DPuzzle
         public string name;
         public uint uniqueID;
         public List<ComponentSave> componentsSaved;
+    }
+
+    public class EditorSettingsSave
+    {
+        public uint uniqueIDReached = 1;
     }
 
     //Use this to save levels
@@ -186,7 +188,7 @@ namespace _2DPuzzle
             string jsonString = File.ReadAllText("Prefabs/" + inEntityName + ".json");
             EntitySave entitySave = JsonConvert.DeserializeObject<EntitySave>(jsonString);
             inEntity.name = entitySave.name;
-            for(int componentIndex = 0; componentIndex < entitySave.componentsSaved.Count; componentIndex++)
+            for (int componentIndex = 0; componentIndex < entitySave.componentsSaved.Count; componentIndex++)
             {
                 Type type = Type.GetType(entitySave.componentsSaved[componentIndex].componentType);
                 object o = Activator.CreateInstance(type);

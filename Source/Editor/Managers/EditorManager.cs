@@ -1,8 +1,8 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework;
 using MonoGame.ImGuiNet;
+using Newtonsoft.Json;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace _2DPuzzle
 {
@@ -70,11 +70,20 @@ namespace _2DPuzzle
         {
             gameBase = inGameBase;
 
+            string jsonString = File.ReadAllText("Editor/EditorSettings.json");
+            EditorSettingsSave editorSettings = JsonConvert.DeserializeObject<EditorSettingsSave>(jsonString);
+
+            if(editorSettings != null)
+            {
+                currentUniqueID = editorSettings.uniqueIDReached;
+            }
+
             guiRenderer = new ImGuiRenderer(gameBase);
             guiRenderer.RebuildFontAtlas();
 
             debugMousePosition = new DebugMousePosition();
             debugMousePosition.transformComponent.position = new Vector2(0, RenderManager.GetInstance().GetScreenHeight() - 20);
+            debugMousePosition.Start();
 
             LevelManager.GetInstance().AddLevel(new LevelTest());
         }
@@ -83,6 +92,13 @@ namespace _2DPuzzle
         {
             uint toReturn = currentUniqueID;
             currentUniqueID++;
+            EditorSettingsSave editorSettings = new EditorSettingsSave()
+            {
+                uniqueIDReached = currentUniqueID
+            };
+
+            string settingsToSave = JsonConvert.SerializeObject(editorSettings, Formatting.Indented);
+            File.WriteAllText("Editor/EditorSettings.json", settingsToSave);
             return toReturn;
         }
 
@@ -122,6 +138,7 @@ namespace _2DPuzzle
             {
                 if (ImGui.BeginMenu("File"))
                 {
+                    if (ImGui.MenuItem("New", "Ctrl+N")) { LevelManager.GetInstance().NewLevel(); }
                     if (ImGui.MenuItem("Open", "Ctrl+O")) { openLevelActive = true; }
                     if (ImGui.MenuItem("Save", "Ctrl+S")) { if (LevelManager.GetInstance().currentLevel.name == string.Empty) { saveLevelActive = true; } else { LevelManager.GetInstance().SaveLevel(); } }
                     if (ImGui.MenuItem("Close", "Ctrl+W")) { gameBase.Exit(); }
@@ -361,19 +378,38 @@ namespace _2DPuzzle
             if (ImGui.MenuItem("Sprite Render Component", ""))
             {
                 addComponentActive = false;
+                SpriteRenderComponent spriteRenderComponent = new SpriteRenderComponent()
+                {
+                    uniqueID = GetNewUniqueID(),
+                    owner = inspectedEntity,
+                };
+                inspectedEntity.components.Add(spriteRenderComponent);
+                spriteRenderComponent.Start();
+                inspectedEntity.differFromPrefab = true;
             }
             if (ImGui.MenuItem("Physics Component", ""))
             {
                 addComponentActive = false;
                 PhysicsComponent physicsComponent = new PhysicsComponent()
                 {
-                    uniqueID = GetNewUniqueID()
+                    uniqueID = GetNewUniqueID(),
+                    owner = inspectedEntity,
                 };
                 inspectedEntity.components.Add(physicsComponent);
+                physicsComponent.Start();
+                inspectedEntity.differFromPrefab = true;
             }
             if (ImGui.MenuItem("Animator Component", ""))
             {
                 addComponentActive = false;
+                AnimatorComponent animatorComponent = new AnimatorComponent()
+                {
+                    uniqueID = GetNewUniqueID(),
+                    owner = inspectedEntity,
+                };
+                inspectedEntity.components.Add(animatorComponent);
+                animatorComponent.Start();
+                inspectedEntity.differFromPrefab = true;
             }
             ImGui.End();
         }
@@ -403,6 +439,7 @@ namespace _2DPuzzle
                     newEntity.uniqueID = newID;
                     LevelManager.GetInstance().currentLevel.entities.Add(newEntity);
                     inspectedEntity = newEntity;
+                    newEntity.Start();
                 }
             }
             ImGui.End();

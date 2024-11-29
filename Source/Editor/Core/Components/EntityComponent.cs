@@ -39,12 +39,18 @@ namespace _2DPuzzle
 
         public virtual void Update(GameTime inGameTime)
         {
-
+            if(!started)
+            {
+                Debug.LogError("Entity " + GetType() + " is not started but you are trying to update it");
+            }
         }
 
         public virtual void Render(GameTime inGameTime)
         {
-
+            if (!started)
+            {
+                Debug.LogError("Entity " + GetType() + " is not started but you are trying to render it");
+            }
         }
 
         public virtual void Start()

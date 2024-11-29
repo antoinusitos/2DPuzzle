@@ -104,6 +104,14 @@ namespace _2DPuzzle
             return graphicsDeviceManager.PreferredBackBufferHeight;
         }
 
+        public void Clear()
+        {
+            for (int currentLayer = minLayer; currentLayer <= maxLayer; currentLayer++)
+            {
+                LayerToRenderComponents[currentLayer].Clear();
+            }
+        }
+
         public void Render(GameTime inGameTime)
         {
             totalBatch = 0;

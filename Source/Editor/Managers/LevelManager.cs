@@ -52,6 +52,20 @@ namespace _2DPuzzle
             return _levels.ToArray();
         }
 
+        public void NewLevel()
+        {
+            if (currentLevel != null)
+            {
+                currentLevel.UninitializeLevel();
+                currentLevel = null;
+
+                RenderManager.GetInstance().Clear();
+                UpdateManager.GetInstance().Clear();
+            }
+
+            currentLevel = new Level();
+        }
+
         public void AddLevel(Level inLevel)
         {
             _levels.Add(inLevel);
@@ -71,6 +85,8 @@ namespace _2DPuzzle
             {
                 currentLevel.UninitializeLevel();
                 currentLevel = null;
+                RenderManager.GetInstance().Clear();
+                UpdateManager.GetInstance().Clear();
             }
             
             /*currentLevel = _levels[levelIndex];

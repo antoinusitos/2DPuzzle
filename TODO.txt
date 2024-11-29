@@ -3,5 +3,3 @@ Editor vs game launch
 Attach entities together
 Add component in editor
 Remove component in editor
-Save unique ID reached
-Allow to spawn prefab
