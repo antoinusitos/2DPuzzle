@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.ImGuiNet;
 using Newtonsoft.Json;
 using System.IO;
@@ -43,6 +44,9 @@ namespace _2DPuzzle
 
         private GameBase gameBase = null;
 
+        private Texture2D gizmo = null;
+        private Vector2 gizmoPosition = Vector2.Zero;
+
         private ImGuiRenderer guiRenderer;
 
         private bool consoleActive = false;
@@ -77,6 +81,8 @@ namespace _2DPuzzle
             {
                 currentUniqueID = editorSettings.uniqueIDReached;
             }
+
+            gizmo = RenderManager.GetInstance().content.Load<Texture2D>("Gizmo");
 
             guiRenderer = new ImGuiRenderer(gameBase);
             guiRenderer.RebuildFontAtlas();
@@ -126,7 +132,13 @@ namespace _2DPuzzle
 
             guiRenderer.EndLayout();
 
+            // Getting DebugMousePositionComponent
             debugMousePosition.components[1].Update(inGameTime);
+
+            RenderManager.GetInstance().totalBatch++;
+            RenderManager.GetInstance().spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderManager.GetInstance().screenScaleMatrix);
+            RenderManager.GetInstance().spriteBatch.Draw(gizmo, gizmoPosition, Color.White);
+            RenderManager.GetInstance().spriteBatch.End();
         }
 
         private void RenderHeader()
@@ -216,6 +228,11 @@ namespace _2DPuzzle
             ImGui.End();
         }
 
+        private void SetGizmoPosition(Vector2 inPos)
+        {
+            gizmoPosition = new Vector2(inPos.X, inPos.Y);
+        }
+
         private void RenderInspector()
         {
             ImGui.SetNextWindowPos(new System.Numerics.Vector2(RenderManager.GetInstance().GetScreenWidth() - 300, 20));
@@ -223,6 +240,15 @@ namespace _2DPuzzle
             ImGui.Begin("Inspector", ImGuiWindowFlags.None);
             if(inspectedEntity != null)
             {
+                if (inspectedEntity.GetComponent<SpriteRenderComponent>() == null)
+                {
+                    SetGizmoPosition(inspectedEntity.transformComponent.position);
+                }
+                else
+                {
+                    SetGizmoPosition(inspectedEntity.transformComponent.position + new Vector2(inspectedEntity.GetComponent<SpriteRenderComponent>().sprite.Width / 2, inspectedEntity.GetComponent<SpriteRenderComponent>().sprite.Height / 2));
+                }
+
                 if (inspectedEntity.isDirty && ImGui.MenuItem("Save Entity"))
                 {
                     SaveManager.GetInstance().SaveEntity(inspectedEntity);
