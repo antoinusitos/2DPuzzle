@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.ImGuiNet;
 using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 namespace _2DPuzzle
 {
@@ -70,6 +71,8 @@ namespace _2DPuzzle
 
         private bool spawnPrefabActive = false;
 
+        private bool attachToActive = false;
+
         public void InitializeManager(GameBase inGameBase)
         {
             gameBase = inGameBase;
@@ -130,6 +133,8 @@ namespace _2DPuzzle
 
             RenderSpawnPrefab();
 
+            RenderAttachTo();
+
             guiRenderer.EndLayout();
 
             // Getting DebugMousePositionComponent
@@ -159,6 +164,7 @@ namespace _2DPuzzle
                 if (ImGui.BeginMenu("Edit"))
                 {
                     if (ImGui.MenuItem("Delete Entity", "Ctrl+Del")) { if (inspectedEntity == null) return; LevelManager.GetInstance().currentLevel.entities.Remove(inspectedEntity); inspectedEntity = null; }
+                    if (ImGui.MenuItem("Attach Entity", "Ctrl+Del")) { if (inspectedEntity == null) return; attachToActive = true; }
                     ImGui.EndMenu();
                 }
                 if (ImGui.MenuItem("Console"))
@@ -215,6 +221,10 @@ namespace _2DPuzzle
             {
                 for (int textIndex = 0; textIndex < LevelManager.GetInstance().currentLevel.entities.Count; textIndex++)
                 {
+                    if (LevelManager.GetInstance().currentLevel.entities[textIndex].parent != null)
+                    {
+                        continue;
+                    }
                     string current = "";
                     bool selected = false;
                     if(inspectedEntity == LevelManager.GetInstance().currentLevel.entities[textIndex])
@@ -227,10 +237,31 @@ namespace _2DPuzzle
                         inspectedEntity = LevelManager.GetInstance().currentLevel.entities[textIndex];
                         Debug.Log("Clicked on " + LevelManager.GetInstance().currentLevel.entities[textIndex].name);
                     }
+                    GetChildren(LevelManager.GetInstance().currentLevel.entities[textIndex], "  ");
                 }
             }
             ImGui.EndChild();
             ImGui.End();
+        }
+
+        private void GetChildren(Entity e, string prev)
+        {
+            for (int childIndex = 0; childIndex < e.children.Count; childIndex++)
+            {
+                string current = "";
+                bool selected = false;
+                if (inspectedEntity == e)
+                {
+                    current = "         (Inspected)";
+                    selected = true;
+                }
+                if (ImGui.MenuItem(prev + "    " + e.children[childIndex].name + current, "", selected))
+                {
+                    inspectedEntity = e.children[childIndex];
+                    Debug.Log("Clicked on " + e.children[childIndex].name);
+                }
+                GetChildren(e.children[childIndex], prev + "    ");
+            }
         }
 
         private void SetGizmoPosition(Vector2 inPos)
@@ -480,6 +511,34 @@ namespace _2DPuzzle
                 }
             }
             ImGui.End();
+        }
+
+        private void RenderAttachTo()
+        {
+            if (!attachToActive)
+            {
+                return;
+            }
+
+            ImGui.Begin("Spawn Prefab", ref attachToActive, ImGuiWindowFlags.None);
+            Entity[] entities = LevelManager.GetInstance().currentLevel.entities.ToArray();
+            if (ImGui.MenuItem("NONE", ""))
+            {
+                inspectedEntity.AttachTo(null);
+                attachToActive = false;
+            }
+            for (int entityIndex = 0; entityIndex < entities.Length; entityIndex++)
+            {
+                if (entities[entityIndex] == inspectedEntity)
+                {
+                    continue;
+                }
+                if (ImGui.MenuItem(entities[entityIndex].name, ""))
+                {
+                    inspectedEntity.AttachTo(entities[entityIndex]);
+                    attachToActive = false;
+                }
+            }
         }
     }
 }

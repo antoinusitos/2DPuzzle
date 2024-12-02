@@ -7,10 +7,12 @@ namespace _2DPuzzle
     public class TransformComponent : EntityComponent
     {
         private Vector2 _position = Vector2.Zero;
+        private Vector2 _relativePosition = Vector2.Zero;
         private float _rotation = 0;
         private Vector2 _scale = Vector2.One;
 
-        public Vector2 position { get => _position; set { _position = value; owner.isDirty = true; } }
+        public Vector2 position { get { if (owner.parent == null) return _position; else return owner.ComputePosition(); } set { _position = value; owner.isDirty = true; } }
+        public Vector2 relativePosition { get => _relativePosition; set { _relativePosition = value; owner.isDirty = true; } }
         public float rotation { get => _rotation; set { _rotation = value; owner.isDirty = true; } }
         public Vector2 scale { get => _scale; set { _scale = value; owner.isDirty = true; } }
 
@@ -32,7 +34,8 @@ namespace _2DPuzzle
         public override string ComponentToString()
         {
             return "Unique ID:" + uniqueID + "\n" + 
-                    "Position:" + position + "\n" + 
+                    "Position:" + position + "\n" +
+                    "Relative Position:" + relativePosition + "\n" +
                     "Rotation:" + rotation + "\n" + 
                     "Scale:" + scale;
         }
@@ -40,8 +43,26 @@ namespace _2DPuzzle
         public override void EditorGUI()
         {
             ImGui.Text("Unique ID:" + uniqueID);
-            ImGui.InputFloat("Position_X", ref _position.X);
-            ImGui.InputFloat("Position_Y", ref _position.Y);
+            float tempX = _position.X;
+            if(ImGui.InputFloat("Position_X", ref tempX))
+            {
+                position = new Vector2(tempX, _position.Y);
+            }
+            float tempY = _position.Y;
+            if (ImGui.InputFloat("Position_Y", ref tempY))
+            {
+                position = new Vector2(_position.X, tempY);
+            }
+            float tempRelX = _relativePosition.X;
+            if (ImGui.InputFloat("RelativePosition_X", ref tempRelX))
+            {
+                relativePosition = new Vector2(tempRelX, _relativePosition.Y);
+            }
+            float tempRelY = _relativePosition.Y;
+            if (ImGui.InputFloat("RelativePosition_Y", ref tempRelY))
+            {
+                relativePosition = new Vector2(_relativePosition.X, tempRelY);
+            }
             ImGui.InputFloat("Rotation", ref _rotation);
             ImGui.InputFloat("Scale_X", ref _scale.X);
             ImGui.InputFloat("Scale_Y", ref _scale.Y);
@@ -55,6 +76,8 @@ namespace _2DPuzzle
                 {
                     { "Editor." + owner.name + ".Position.X." + uniqueID, position.X },
                     { "Editor." + owner.name + ".Position.Y." + uniqueID, position.Y },
+                    { "Editor." + owner.name + ".RelativePosition.X." + uniqueID, relativePosition.X },
+                    { "Editor." + owner.name + ".RelativePosition.Y." + uniqueID, relativePosition.Y },
                     { "Editor." + owner.name + ".Rotation." + uniqueID, rotation },
                     { "Editor." + owner.name + ".Scale.X." + uniqueID, scale.X },
                     { "Editor." + owner.name + ".Scale.Y." + uniqueID, scale.Y }
@@ -85,6 +108,18 @@ namespace _2DPuzzle
                 y = inSavedData.savedFloat["Editor." + owner.name + ".Position.Y." + uniqueID];
             }
             position = new Vector2(x, y);
+
+            x = 0;
+            y = 0;
+            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".RelativePosition.X." + uniqueID))
+            {
+                x = inSavedData.savedFloat["Editor." + owner.name + ".RelativePosition.X." + uniqueID];
+            }
+            if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".RelativePosition.Y." + uniqueID))
+            {
+                y = inSavedData.savedFloat["Editor." + owner.name + ".RelativePosition.Y." + uniqueID];
+            }
+            relativePosition = new Vector2(x, y);
 
             if (inSavedData.savedFloat.ContainsKey("Editor." + owner.name + ".Rotation." + uniqueID))
             {

@@ -1,5 +1,5 @@
 WorldSettings (PlayertoSpawn : Entity)
 Editor vs game launch
-Attach entities together
-Add component in editor (Animator)
+Detach entities together
+Add component in editor (Animator + allow flexible adding from component folder)
 Allow to add states and transitions in the animator tool

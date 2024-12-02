@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace _2DPuzzle
@@ -9,16 +9,13 @@ namespace _2DPuzzle
         public bool isActive = true;
         public List<EntityComponent> components = null;
 
-        [JsonIgnore]
         public Entity parent = null;
 
         public List<Entity> children = null;
 
-        [JsonIgnore]
         public TransformComponent transformComponent = null;
 
         public uint uniqueID = 0;
-        [JsonIgnore]
         public bool isDirty = false;
 
         public bool differFromPrefab = false;
@@ -94,6 +91,34 @@ namespace _2DPuzzle
             }
 
             return entitySave;
+        }
+
+        public void AttachTo(Entity inEntity)
+        {
+            if(inEntity == null)
+            {
+                if(parent != null)
+                {
+                    parent.children.Remove(this);
+                    parent = null;
+                }
+                return;
+            }
+
+            inEntity.children.Add(this);
+            parent = inEntity;
+        }
+
+        public Vector2 ComputePosition()
+        {
+            if(parent == null)
+            {
+                return transformComponent.position;
+            }
+            else
+            {
+                return transformComponent.relativePosition + parent.ComputePosition();
+            }
         }
     }
 }
