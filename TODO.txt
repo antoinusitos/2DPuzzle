@@ -1,5 +1,5 @@
 WorldSettings (PlayertoSpawn : Entity)
 Editor vs game launch
 Attach entities together
-Add component in editor
-Remove component in editor
+Add component in editor (Animator)
+Allow to add states and transitions in the animator tool

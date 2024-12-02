@@ -156,6 +156,11 @@ namespace _2DPuzzle
                     if (ImGui.MenuItem("Close", "Ctrl+W")) { gameBase.Exit(); }
                     ImGui.EndMenu();
                 }
+                if (ImGui.BeginMenu("Edit"))
+                {
+                    if (ImGui.MenuItem("Delete Entity", "Ctrl+Del")) { if (inspectedEntity == null) return; LevelManager.GetInstance().currentLevel.entities.Remove(inspectedEntity); inspectedEntity = null; }
+                    ImGui.EndMenu();
+                }
                 if (ImGui.MenuItem("Console"))
                 {
                     consoleActive = true;
@@ -240,14 +245,15 @@ namespace _2DPuzzle
             ImGui.Begin("Inspector", ImGuiWindowFlags.None);
             if(inspectedEntity != null)
             {
-                if (inspectedEntity.GetComponent<SpriteRenderComponent>() == null)
+                SetGizmoPosition(inspectedEntity.transformComponent.position);
+                /*if (inspectedEntity.GetComponent<SpriteRenderComponent>() == null || inspectedEntity.GetComponent<SpriteRenderComponent>().sprite == null)
                 {
                     SetGizmoPosition(inspectedEntity.transformComponent.position);
                 }
                 else
                 {
                     SetGizmoPosition(inspectedEntity.transformComponent.position + new Vector2(inspectedEntity.GetComponent<SpriteRenderComponent>().sprite.Width / 2, inspectedEntity.GetComponent<SpriteRenderComponent>().sprite.Height / 2));
-                }
+                }*/
 
                 if (inspectedEntity.isDirty && ImGui.MenuItem("Save Entity"))
                 {
@@ -270,6 +276,11 @@ namespace _2DPuzzle
                     string componentName = inspectedEntity.components[componentIndex].GetType().ToString();
                     componentName = componentName.Remove(0, 10);
                     ImGui.BulletText(componentName);
+                    if (ImGui.MenuItem("Delete " + componentName))
+                    {
+                        inspectedEntity.components.Remove(inspectedEntity.components[componentIndex]);
+                        continue;
+                    }
                     inspectedEntity.components[componentIndex].EditorGUI();
                     if (inspectedEntity.components[componentIndex].GetType() == typeof(AnimatorComponent))
                     {

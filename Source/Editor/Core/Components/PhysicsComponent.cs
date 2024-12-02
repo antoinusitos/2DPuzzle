@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static System.Formats.Asn1.AsnWriter;
 using System.Collections.Generic;
 using ImGuiNET;
-using System.Runtime.Intrinsics.X86;
 
 namespace _2DPuzzle
 {
@@ -26,6 +24,9 @@ namespace _2DPuzzle
         public Texture2D whiteRectangle;
 
         public float mass = 1.0f;
+
+        private int _rectangeSizeX = 1;
+        private int _rectangeSizeY = 1;
 
         public PhysicsComponent() : base()
         {
@@ -58,6 +59,8 @@ namespace _2DPuzzle
 
             rectangle.X = (int)owner.transformComponent.position.X;
             rectangle.Y = (int)owner.transformComponent.position.Y;
+            rectangle.Width = _rectangeSizeX;
+            rectangle.Height = _rectangeSizeY;
 
             Debug.DrawLine(new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y), Color.Green);
             Debug.DrawLine(new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X, rectangle.Y + rectangle.Height), Color.Green);
@@ -71,18 +74,47 @@ namespace _2DPuzzle
                     "mass:" + mass + "\n" +
                     "velocity:" + velocity + "\n" +
                     "Use Gravity:" + useGravity + "\n" +
+                    "Collision Type:" + collisionType + "\n" +
                     "Rectangle Pos:" + rectangle.Location.ToString() + "\n" +
                     "Rectangle Size:" + rectangle.Size.ToString();
         }
 
         public override void EditorGUI()
         {
+            rectangle.X = (int)owner.transformComponent.position.X;
+            rectangle.Y = (int)owner.transformComponent.position.Y;
+            rectangle.Width = _rectangeSizeX;
+            rectangle.Height = _rectangeSizeY;
+
+            Debug.DrawLine(new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y), Color.Green);
+            Debug.DrawLine(new Vector2(rectangle.X, rectangle.Y), new Vector2(rectangle.X, rectangle.Y + rectangle.Height), Color.Green);
+            Debug.DrawLine(new Vector2(rectangle.X + rectangle.Width, rectangle.Y), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), Color.Green);
+            Debug.DrawLine(new Vector2(rectangle.X, rectangle.Y + rectangle.Height), new Vector2(rectangle.X + rectangle.Width, rectangle.Y + rectangle.Height), Color.Green);
+
             ImGui.Text("Unique ID:" + uniqueID);
-            ImGui.Text("mass:" + mass);
+            ImGui.InputFloat("mass", ref mass);
             ImGui.Text("velocity:" + velocity);
-            ImGui.Text("Use Gravity:" + useGravity);
+            ImGui.Checkbox("Use Gravity", ref useGravity);
+
+            string[] items = { "STATIC", "DYNAMIC" };
+            if(ImGui.BeginCombo("Collision Type", items[(int)collisionType]))
+            {
+                for (int n = 0; n < items.Length; n++)
+                {
+                    bool is_selected = (collisionType.ToString() == items[n]); // You can store your selection however you want, outside or inside your objects
+                    if (ImGui.Selectable(items[n], is_selected))
+                    {
+                        collisionType = (CollisionType)n;
+                    }
+                    if (is_selected)
+                        ImGui.SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
+                }
+                ImGui.EndCombo();
+            }
+
             ImGui.Text("Rectangle Pos:" + rectangle.Location.ToString());
-            ImGui.Text("Rectangle Size:" + rectangle.Size.ToString());
+            ImGui.InputInt("Rectangle Size X" , ref _rectangeSizeX);
+            ImGui.InputInt("Rectangle Size Y", ref _rectangeSizeY);
         }
 
         public override SavedData GetSavedData()

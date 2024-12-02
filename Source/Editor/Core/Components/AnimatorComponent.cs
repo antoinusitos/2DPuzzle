@@ -43,6 +43,11 @@ namespace _2DPuzzle
         {
             base.Render(inGameTime);
 
+            if(currentAnimationState == null)
+            {
+                return;
+            }
+
             currentAnimationState.spriteAnimatorRenderComponent.Render(inGameTime);
         }
 
