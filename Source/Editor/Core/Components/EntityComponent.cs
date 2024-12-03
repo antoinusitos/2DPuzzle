@@ -82,6 +82,11 @@ namespace _2DPuzzle
 
         }
 
+        public virtual void CloneComponent(ref EntityComponent inComponent)
+        {
+
+        }
+
         public virtual SavedData GetSavedData()
         {
             return new SavedData();

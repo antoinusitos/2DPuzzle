@@ -19,6 +19,7 @@ namespace _2DPuzzle
         protected SoundManager _soundManager = null;
         protected SaveManager _saveManager = null;
         protected EditorManager _editorManager = null;
+        protected InputManager _inputManager = null;
 
         protected bool _isResizing = false;
 
@@ -59,6 +60,7 @@ namespace _2DPuzzle
             _saveManager.InitializeManager();
             _editorManager = EditorManager.GetInstance();
             _editorManager.InitializeManager(this);
+            _inputManager = InputManager.GetInstance();
 
             base.Initialize();
         }
@@ -75,7 +77,7 @@ namespace _2DPuzzle
                 return;
             }
 
-            if(!_updateManager.Update(inGameTime))
+            if (!_updateManager.Update(inGameTime))
             {
                 Exit();
             }
@@ -87,6 +89,8 @@ namespace _2DPuzzle
 
         protected override void Draw(GameTime inGameTime)
         {
+            _inputManager.Update();
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _renderManager.totalBatch = 0;

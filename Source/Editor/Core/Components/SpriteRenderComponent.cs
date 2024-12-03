@@ -21,7 +21,7 @@ namespace _2DPuzzle
 
         private void LoadSprite()
         {
-            sprite = RenderManager.GetInstance().content.Load<Texture2D>(spritePath);
+            sprite = ContentManager.GetInstance().GetSprite(spritePath);
         }
 
         public override void Render(GameTime inGameTime)
@@ -83,6 +83,15 @@ namespace _2DPuzzle
             {
                 SwitchLayer(inSavedData.savedInt["Editor." + owner.name + ".Layer"]);
             }
+        }
+
+        public override void CloneComponent(ref EntityComponent inComponent)
+        {
+            SpriteRenderComponent spriteRenderComponent = inComponent as SpriteRenderComponent;
+            spriteRenderComponent.spritePath = spritePath;
+            spriteRenderComponent.layer = layer;
+            spriteRenderComponent.SwitchLayer(layer);
+            spriteRenderComponent.LoadSprite();
         }
     }
 }

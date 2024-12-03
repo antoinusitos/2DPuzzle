@@ -1,4 +1,6 @@
-﻿
+﻿using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+
 namespace _2DPuzzle
 {
     public class ContentManager
@@ -6,6 +8,8 @@ namespace _2DPuzzle
         private static ContentManager _instance;
 
         private static readonly object _lock = new object();
+
+        private Dictionary<string, Texture2D> spritesDictionary = new Dictionary<string, Texture2D>();
 
         public static ContentManager GetInstance()
         {
@@ -38,7 +42,18 @@ namespace _2DPuzzle
 
         public void LoadContent()
         {
+            spritesDictionary.Add("Idle", RenderManager.GetInstance().content.Load<Texture2D>("Idle"));
+            spritesDictionary.Add("TileTest", RenderManager.GetInstance().content.Load<Texture2D>("TileTest"));
+        }
 
+        public Texture2D GetSprite(string inName)
+        {
+            if(spritesDictionary.ContainsKey(inName))
+            {
+                return spritesDictionary[inName];
+            }
+
+            return null;
         }
     }
 }

@@ -39,13 +39,27 @@ namespace _2DPuzzle
             return _instance;
         }
 
+        private KeyboardState previousKeyboardState;
+        private KeyboardState currentKeyboardState;
+
         public InputManager()
         {
         }
 
+        public void Update()
+        {
+            previousKeyboardState = currentKeyboardState;
+            currentKeyboardState = Keyboard.GetState();
+        }
+
         public bool IsKeyDown(Keys inKey)
         {
-            return Keyboard.GetState().IsKeyDown(inKey);
+            return currentKeyboardState.IsKeyDown(inKey);
+        }
+
+        public bool WasKeyPressed(Keys inKey)
+        {
+            return previousKeyboardState.IsKeyDown(inKey) && currentKeyboardState.IsKeyUp(inKey);
         }
 
         public bool IsKeyDown(string inName)
@@ -56,7 +70,7 @@ namespace _2DPuzzle
                 return false;
             }
 
-            return Keyboard.GetState().IsKeyDown(Inputs.mapping[inName]);
+            return currentKeyboardState.IsKeyDown(Inputs.mapping[inName]);
         }
 
        /* public bool IsGamepadButtonDown(GamePadButtons inGamepadButton)

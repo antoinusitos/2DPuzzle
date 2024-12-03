@@ -144,6 +144,18 @@ namespace _2DPuzzle
             RenderManager.GetInstance().spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderManager.GetInstance().screenScaleMatrix);
             RenderManager.GetInstance().spriteBatch.Draw(gizmo, gizmoPosition, Color.White);
             RenderManager.GetInstance().spriteBatch.End();
+
+            if(InputManager.GetInstance().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) && InputManager.GetInstance().WasKeyPressed(Microsoft.Xna.Framework.Input.Keys.D))
+            {
+                if (inspectedEntity == null) return; 
+                LevelManager.GetInstance().currentLevel.entities.Add(inspectedEntity.Clone());
+            }
+            if (InputManager.GetInstance().WasKeyPressed(Microsoft.Xna.Framework.Input.Keys.Delete))
+            {
+                if (inspectedEntity == null) return;
+                LevelManager.GetInstance().currentLevel.entities.Remove(inspectedEntity);
+                inspectedEntity = null;
+            }
         }
 
         private void RenderHeader()
@@ -165,6 +177,7 @@ namespace _2DPuzzle
                 {
                     if (ImGui.MenuItem("Delete Entity", "Ctrl+Del")) { if (inspectedEntity == null) return; LevelManager.GetInstance().currentLevel.entities.Remove(inspectedEntity); inspectedEntity = null; }
                     if (ImGui.MenuItem("Attach Entity", "Ctrl+Del")) { if (inspectedEntity == null) return; attachToActive = true; }
+                    if (ImGui.MenuItem("Duplicate Entity", "Ctrl+D")) { if (inspectedEntity == null) return; LevelManager.GetInstance().currentLevel.entities.Add(inspectedEntity.Clone()); }
                     ImGui.EndMenu();
                 }
                 if (ImGui.MenuItem("Console"))

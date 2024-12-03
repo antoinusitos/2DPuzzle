@@ -3,3 +3,5 @@ Editor vs game launch
 Detach entities together
 Add component in editor (Animator + allow flexible adding from component folder)
 Allow to add states and transitions in the animator tool
+finish ctrl C and ctrl V
+Add flexible content manager loading

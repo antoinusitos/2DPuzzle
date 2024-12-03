@@ -1,5 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 
 namespace _2DPuzzle
 {
@@ -119,6 +122,64 @@ namespace _2DPuzzle
             {
                 return transformComponent.relativePosition + parent.ComputePosition();
             }
+        }
+
+        public Entity Clone()
+        {
+            Entity entity = new Entity()
+            {
+                name = name,
+                uniqueID = EditorManager.GetInstance().GetNewUniqueID()
+            };
+
+            for (int componentIndex = 0; componentIndex < components.Count; componentIndex++)
+            {
+                Type type = components[componentIndex].GetType();
+                object o = Activator.CreateInstance(type);
+                if (type.IsSubclassOf(typeof(EntityComponent)))
+                {
+                    EntityComponent entityComponent = (EntityComponent)o;
+                    entityComponent.uniqueID = EditorManager.GetInstance().GetNewUniqueID();
+                    entityComponent.owner = entity;
+                    components[componentIndex].CloneComponent(ref entityComponent);
+                    entity.components.Add(entityComponent);
+                }
+                else if (type == typeof(AnimationState))
+                {
+                    AnimationState animationState = (AnimationState)o;
+                    animationState.uniqueID = components[componentIndex].uniqueID;
+                    AnimatorComponent animatorComponent = entity.GetComponent<AnimatorComponent>();
+                    animationState.parentAnimatorComponent = animatorComponent;
+                    animationState.parentStateMachine = animatorComponent;
+                    animationState.LoadSavedData(components[componentIndex].GetSavedData());
+                    if (animatorComponent.currentState == null)
+                    {
+                        animatorComponent.SetStartingState(animationState);
+                    }
+                    animatorComponent.Start();
+                    animatorComponent.allStates.Add(animationState);
+                }
+                else if (type == typeof(StateMachineTransition))
+                {
+                    StateMachineTransition stateMachineTransition = (StateMachineTransition)o;
+                    stateMachineTransition.uniqueID = components[componentIndex].uniqueID;
+                    AnimatorComponent animatorComponent = entity.GetComponent<AnimatorComponent>();
+                    stateMachineTransition.parentStateMachine = animatorComponent;
+                    stateMachineTransition.LoadSavedData(components[componentIndex].GetSavedData());
+                    animatorComponent.allTransitions.Add(stateMachineTransition);
+                    for (int animationStateIndex = 0; animationStateIndex < animatorComponent.allStates.Count; animationStateIndex++)
+                    {
+                        if (animatorComponent.allStates[animationStateIndex] == stateMachineTransition.fromState)
+                        {
+                            animatorComponent.allStates[animationStateIndex].transitions.Add(stateMachineTransition);
+                        }
+                    }
+                }
+            }
+            entity.transformComponent = entity.GetComponent<TransformComponent>();
+            entity.Start();
+
+            return entity;
         }
     }
 }

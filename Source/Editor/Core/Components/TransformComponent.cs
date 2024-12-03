@@ -68,6 +68,15 @@ namespace _2DPuzzle
             ImGui.InputFloat("Scale_Y", ref _scale.Y);
         }
 
+        public override void CloneComponent(ref EntityComponent inComponent)
+        {
+            TransformComponent transformComponent = inComponent as TransformComponent;
+            transformComponent.position = position;
+            transformComponent.relativePosition = relativePosition;
+            transformComponent.rotation = rotation;
+            transformComponent.scale = scale;
+        }
+
         public override SavedData GetSavedData()
         {
             SavedData savedData = new SavedData
