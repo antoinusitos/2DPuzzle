@@ -84,17 +84,18 @@ namespace _2DPuzzle
 
         public virtual void CloneComponent(ref EntityComponent inComponent)
         {
-
+            Debug.LogWarning("No Clone function created for " + GetType().ToString());
         }
 
         public virtual SavedData GetSavedData()
         {
+            Debug.LogWarning("No GetSavedData function created for " + GetType().ToString());
             return new SavedData();
         }
 
         public virtual void LoadSavedData(SavedData inSavedData)
         {
-
+            Debug.LogWarning("No LoadSavedData function created for " + GetType().ToString());
         }
 
         public virtual ComponentSave[] GetMoreComponentsToSave()

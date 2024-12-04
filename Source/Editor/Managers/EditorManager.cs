@@ -45,8 +45,7 @@ namespace _2DPuzzle
 
         private GameBase gameBase = null;
 
-        private Texture2D gizmo = null;
-        private Vector2 gizmoPosition = Vector2.Zero;
+        private Gizmo gizmo = null;
 
         private ImGuiRenderer guiRenderer;
 
@@ -56,7 +55,7 @@ namespace _2DPuzzle
 
         public bool isPlaying = false;
 
-        private Entity inspectedEntity = null;
+        public Entity inspectedEntity = null;
 
         private DebugMousePosition debugMousePosition = null;
 
@@ -85,7 +84,8 @@ namespace _2DPuzzle
                 currentUniqueID = editorSettings.uniqueIDReached;
             }
 
-            gizmo = RenderManager.GetInstance().content.Load<Texture2D>("Gizmo");
+            gizmo = new Gizmo();
+            gizmo.Start();
 
             guiRenderer = new ImGuiRenderer(gameBase);
             guiRenderer.RebuildFontAtlas();
@@ -139,11 +139,6 @@ namespace _2DPuzzle
 
             // Getting DebugMousePositionComponent
             debugMousePosition.components[1].Update(inGameTime);
-
-            RenderManager.GetInstance().totalBatch++;
-            RenderManager.GetInstance().spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderManager.GetInstance().screenScaleMatrix);
-            RenderManager.GetInstance().spriteBatch.Draw(gizmo, gizmoPosition, Color.White);
-            RenderManager.GetInstance().spriteBatch.End();
 
             if(InputManager.GetInstance().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) && InputManager.GetInstance().WasKeyPressed(Microsoft.Xna.Framework.Input.Keys.D))
             {
@@ -279,7 +274,7 @@ namespace _2DPuzzle
 
         private void SetGizmoPosition(Vector2 inPos)
         {
-            gizmoPosition = new Vector2(inPos.X, inPos.Y);
+            gizmo.transformComponent.position = new Vector2(inPos.X, inPos.Y);
         }
 
         private void RenderInspector()

@@ -59,7 +59,6 @@ namespace _2DPuzzle
             _saveManager = SaveManager.GetInstance();
             _saveManager.InitializeManager();
             _editorManager = EditorManager.GetInstance();
-            _editorManager.InitializeManager(this);
             _inputManager = InputManager.GetInstance();
 
             base.Initialize();
@@ -68,6 +67,7 @@ namespace _2DPuzzle
         protected override void LoadContent()
         {
             _contentManager.LoadContent();
+            _editorManager.InitializeManager(this);
         }
 
         protected override void Update(GameTime inGameTime)

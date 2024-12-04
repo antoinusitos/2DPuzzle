@@ -44,6 +44,7 @@ namespace _2DPuzzle
         {
             spritesDictionary.Add("Idle", RenderManager.GetInstance().content.Load<Texture2D>("Idle"));
             spritesDictionary.Add("TileTest", RenderManager.GetInstance().content.Load<Texture2D>("TileTest"));
+            spritesDictionary.Add("Gizmo", RenderManager.GetInstance().content.Load<Texture2D>("Gizmo"));
         }
 
         public Texture2D GetSprite(string inName)
