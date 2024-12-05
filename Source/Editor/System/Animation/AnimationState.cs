@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using ImGuiNET;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace _2DPuzzle
 {
@@ -78,6 +80,19 @@ namespace _2DPuzzle
             }
 
             LoadSpriteAnimatorRender(false);
+        }
+
+        public override void EditorGUI()
+        {
+            ImGui.Text("Unique ID:" + uniqueID);
+            ImGui.Text("Name:" + animationStateName);
+            ImGui.InputText("spritePath", ref spritePath, 32);
+            ImGui.InputInt("frameNumber", ref frameNumber);
+            ImGui.Checkbox("loop", ref loop);
+            if (ImGui.MenuItem("Load Sprite"))
+            {
+                LoadSpriteAnimatorRender(false);
+            }
         }
     }
 }

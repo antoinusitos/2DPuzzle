@@ -1,10 +1,8 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGame.ImGuiNet;
 using Newtonsoft.Json;
 using System.IO;
-using System.Linq;
 
 namespace _2DPuzzle
 {
@@ -424,23 +422,40 @@ namespace _2DPuzzle
             }
 
             ImGui.Begin("Animator Tool", ref animatorToolActive, ImGuiWindowFlags.None);
+            if (ImGui.MenuItem("Create State", ""))
+            {
+                inspectedAnimatorComponent.allStates.Add(new AnimationState());
+            }
             ImGui.BeginChild("Scrolling", new System.Numerics.Vector2(0), ImGuiChildFlags.None);
             AnimationState[] animationStates = inspectedAnimatorComponent.allStates.ToArray();
             for (int stateIndex = 0; stateIndex < animationStates.Length; stateIndex++)
             {
-                ImGui.TextColored(new System.Numerics.Vector4(1, 0, 0, 1), "Name:" + animationStates[stateIndex].animationStateName);
-                ImGui.Text("Sprite Path:" + animationStates[stateIndex].spritePath);
+                animationStates[stateIndex].EditorGUI();
+                if (ImGui.MenuItem("Create Transition", ""))
+                {
+                    StateMachineTransition stateMachineTransition = new StateMachineTransition();
+                    inspectedAnimatorComponent.allTransitions.Add(stateMachineTransition);
+                    animationStates[stateIndex].transitions.Add(stateMachineTransition);
+                }
                 ImGui.Separator();
                 if (ImGui.CollapsingHeader("Transitions" + stateIndex))
                 {
                     for (int transitionIndex = 0; transitionIndex < animationStates[stateIndex].transitions.Count; transitionIndex++)
                     {
-                        ImGui.Text("From:" + animationStates[stateIndex].transitions[transitionIndex].fromState.animationStateName);
-                        ImGui.Text("To:" + animationStates[stateIndex].transitions[transitionIndex].toState.animationStateName);
+                        ImGui.Text("From:" + (animationStates[stateIndex].transitions[transitionIndex].fromState != null ? animationStates[stateIndex].transitions[transitionIndex].fromState.animationStateName : ""));
+                        ImGui.Text("To:" + (animationStates[stateIndex].transitions[transitionIndex].toState != null ? animationStates[stateIndex].transitions[transitionIndex].toState.animationStateName  : ""));
                         ImGui.Text("Condition Data");
-                        ImGui.Text("Parameter:" + animationStates[stateIndex].transitions[transitionIndex].transitionCondition.parameter);
-                        ImGui.Text("Condition:" + animationStates[stateIndex].transitions[transitionIndex].transitionCondition.condition);
-                        ImGui.Text("Value:" + animationStates[stateIndex].transitions[transitionIndex].transitionCondition.value);
+                        if (animationStates[stateIndex].transitions[transitionIndex].transitionCondition == null && ImGui.MenuItem("Create Condition", ""))
+                        {
+                            animationStates[stateIndex].transitions[transitionIndex].transitionCondition = new TransitionCondition();
+                        }
+                        if (animationStates[stateIndex].transitions[transitionIndex].transitionCondition != null)
+                        {
+                            ImGui.Text("Parameter:" + animationStates[stateIndex].transitions[transitionIndex].transitionCondition.parameter);
+                            ImGui.Text("Condition:" + animationStates[stateIndex].transitions[transitionIndex].transitionCondition.condition);
+                            ImGui.Text("Value:" + animationStates[stateIndex].transitions[transitionIndex].transitionCondition.value);
+                        }
+                        ImGui.Separator();
                     }
                 }
                 ImGui.Separator();

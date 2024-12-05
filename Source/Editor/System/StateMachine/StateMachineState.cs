@@ -53,5 +53,10 @@ namespace _2DPuzzle
         {
 
         }
+
+        public virtual void EditorGUI()
+        {
+
+        }
     }
 }
