@@ -145,6 +145,13 @@ namespace _2DPuzzle
                 if (inspectedEntity == null) return; 
                 LevelManager.GetInstance().currentLevel.entities.Add(inspectedEntity.Clone());
             }
+            if (InputManager.GetInstance().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) && InputManager.GetInstance().WasKeyPressed(Microsoft.Xna.Framework.Input.Keys.F))
+            {
+                if (inspectedEntity == null) return;
+                Entity e = inspectedEntity.Clone();
+                LevelManager.GetInstance().currentLevel.entities.Add(e);
+                e.transformComponent.position += Vector2.UnitX * 16;
+            }
             if (InputManager.GetInstance().WasKeyPressed(Microsoft.Xna.Framework.Input.Keys.Delete))
             {
                 if (inspectedEntity == null) return;
